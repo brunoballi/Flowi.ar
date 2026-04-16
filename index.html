@@ -347,14 +347,35 @@
 
   /* RESPONSIVE */
   @media (max-width: 768px) {
+    html, body { overflow-x: hidden; }
+    nav { padding: 0.8rem 4%; }
     .nav-links { display: none; }
+    .nav-cta { font-size: 0.78rem; padding: 0.45rem 1rem; }
     .hamburger { display: flex; }
+    .hero { padding: 6rem 4% 3rem; min-height: auto; }
+    .hero-grid { display: none; }
+    h1 { font-size: 2.4rem; word-break: break-word; }
+    .hero-sub { font-size: 0.95rem; }
+    .hero-badge { font-size: 0.72rem; }
+    .hero-actions { flex-direction: column; gap: 0.8rem; }
+    .btn-primary, .btn-secondary { font-size: 0.9rem; padding: 0.75rem 1.5rem; text-align: center; justify-content: center; }
     .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .stat-num { font-size: 1.4rem; }
+    section { padding: 3rem 4%; }
+    .section-title { font-size: 1.6rem; }
+    .section-sub { font-size: 0.9rem; }
     .steps { grid-template-columns: 1fr; }
     .step { border-right: none; border-bottom: 1px solid var(--border); }
     .step:last-child { border-bottom: none; }
-    .bot-section { grid-template-columns: 1fr; }
-    .contact-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .bot-section { grid-template-columns: 1fr; gap: 2rem; }
+    .bot-chat { max-width: 100%; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-form div[style*="grid-template-columns"] { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; gap: 0.8rem; }
+    .wsp-float { bottom: 1.2rem; right: 1.2rem; width: 50px; height: 50px; }
+    .wsp-tooltip { display: none; }
   }
 </style>
 </head>
