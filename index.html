@@ -197,6 +197,17 @@
     margin-top: auto;
     padding-top: 1rem;
   }
+  .service-subscription {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(29,158,117,0.12); border: 1px solid var(--border-strong);
+    color: var(--green-light);
+    font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500;
+    padding: 4px 10px; border-radius: 50px;
+    margin-top: 8px; width: fit-content;
+  }
+  .service-subscription::before {
+    content: ''; width: 5px; height: 5px; background: var(--green); border-radius: 50%;
+  }
   .service-features {
     list-style: none; padding: 0; margin: 0 0 1.2rem 0;
     display: flex; flex-direction: column; gap: 6px;
@@ -515,8 +526,10 @@
         <li>Relevamiento y diseño previo</li>
         <li>Implementación no-code</li>
         <li>Capacitación del equipo</li>
+        <li>Opción de suscripción mensual disponible</li>
       </ul>
       <div class="service-price">Desde USD 600</div>
+      <div class="service-subscription">o suscripción desde USD 25 / mes</div>
     </div>
     <div class="service-card">
       <div class="service-icon">📋</div>
