@@ -193,6 +193,18 @@
     font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700;
     color: var(--green);
   }
+  .service-features {
+    list-style: none; padding: 0; margin: 0 0 1.2rem 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .service-features li {
+    font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;
+    padding-left: 18px; position: relative;
+  }
+  .service-features li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 6px; height: 6px; background: var(--green); border-radius: 50%;
+  }
   .service-tag {
     position: absolute; top: 1.5rem; right: 1.5rem;
     background: rgba(29,158,117,0.15); color: var(--green-light);
@@ -476,32 +488,66 @@
 <section id="servicios">
   <span class="section-label">Lo que hacemos</span>
   <h2 class="section-title">Nuestros servicios</h2>
-  <p class="section-sub">Desde un bot de WhatsApp hasta un sistema completo de gestión. Cada solución, a la medida de tu negocio.</p>
+  <p class="section-sub">Desde un bot de WhatsApp hasta una tienda online. Cada solución, a la medida de tu negocio.</p>
   <div class="services-grid">
     <div class="service-card featured">
       <span class="service-tag">Más pedido</span>
       <div class="service-icon">🤖</div>
       <h3>Bot de WhatsApp</h3>
-      <p>Respuestas automáticas 24/7, menú de opciones, captura de datos y derivación a humano cuando hace falta.</p>
-      <div class="service-price">USD 150 – 300</div>
+      <p>Atención automática 24/7 con menú de opciones, captura de datos, confirmación de reservas y derivación a humano cuando sea necesario.</p>
+      <ul class="service-features">
+        <li>Configuración completa del flujo</li>
+        <li>Menú interactivo personalizado</li>
+        <li>Integración con tu agenda o sistema</li>
+        <li>Pruebas y ajustes incluidos</li>
+      </ul>
+      <div class="service-price">USD 80 – 150</div>
     </div>
     <div class="service-card">
       <div class="service-icon">⚙️</div>
-      <h3>Sistemas de gestión personalizados</h3>
-      <p>Diseñamos e implementamos el sistema que tu negocio necesita. Reservas, turnos, inventarios, clientes — todo a tu medida.</p>
-      <div class="service-price">USD 400 – 800</div>
+      <h3>Sistema de gestión</h3>
+      <p>Reservas, turnos, inventario o base de clientes. Diseñado exactamente para tu negocio y forma de trabajar.</p>
+      <ul class="service-features">
+        <li>Relevamiento y diseño previo</li>
+        <li>Implementación no-code</li>
+        <li>Capacitación del equipo</li>
+      </ul>
+      <div class="service-price">USD 600 – 900</div>
     </div>
     <div class="service-card">
-      <div class="service-icon">⚡</div>
-      <h3>Automatización de procesos</h3>
-      <p>Flujos entre apps con Make y Zapier. Conectamos formularios, hojas, WhatsApp, email y más sin una línea de código.</p>
+      <div class="service-icon">📋</div>
+      <h3>Formularios, QR y encuestas</h3>
+      <p>Formularios digitales inteligentes con QR para registros, check-in, encuestas de satisfacción y captura de datos — sin papel, sin carga manual.</p>
+      <ul class="service-features">
+        <li>QR inteligente para tu local o evento</li>
+        <li>Formularios de registro y check-in</li>
+        <li>Encuestas de satisfacción post-visita</li>
+        <li>Datos directo a Google Sheets o CRM</li>
+      </ul>
+      <div class="service-price">USD 50 – 100</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <h3>Landing page y tiendas online</h3>
+      <p>Tu presencia web profesional lista para vender. Landing pages que convierten o tiendas online con catálogo, carrito y medios de pago.</p>
+      <ul class="service-features">
+        <li>Diseño a medida de tu marca</li>
+        <li>Dominio, hosting y SSL incluidos</li>
+        <li>Integración con WhatsApp y medios de pago</li>
+        <li>Optimizada para mobile y Google</li>
+      </ul>
       <div class="service-price">USD 200 – 500</div>
     </div>
     <div class="service-card">
       <div class="service-icon">🔄</div>
       <h3>Mantenimiento mensual</h3>
-      <p>Soporte continuo, ajustes, mejoras y monitoreo. Tu automatización siempre funcionando al 100%.</p>
-      <div class="service-price">USD 50 – 150 / mes</div>
+      <p>Soporte continuo, ajustes, mejoras y monitoreo. Tu solución siempre funcionando al 100%.</p>
+      <ul class="service-features">
+        <li>Soporte por WhatsApp</li>
+        <li>Ajustes y mejoras mensuales</li>
+        <li>Monitoreo de flujos</li>
+      </ul>
+      <div class="service-price">USD 30 – 70 / mes</div>
     </div>
     <div class="service-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height: 200px;">
       <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem;">¿Tenés un proceso específico en mente?</p>
