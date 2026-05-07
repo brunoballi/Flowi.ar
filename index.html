@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --green: #1D9E75;
     --green-dark: #085041;
@@ -23,9 +23,9 @@
     --border: rgba(29,158,117,0.15);
     --border-strong: rgba(29,158,117,0.3);
   }
-
+ 
   html { scroll-behavior: smooth; }
-
+ 
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -33,9 +33,9 @@
     line-height: 1.6;
     overflow-x: hidden;
   }
-
+ 
   h1,h2,h3,h4 { font-family: 'Syne', sans-serif; line-height: 1.15; }
-
+ 
   /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -59,7 +59,7 @@
   .nav-cta:hover { background: #16836100; border: 1px solid var(--green); transform: translateY(-1px); }
   .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
-
+ 
   /* HERO */
   .hero {
     min-height: 100vh;
@@ -128,7 +128,7 @@
   }
   .stat-num { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text); }
   .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-
+ 
   /* SECTIONS */
   section { padding: 5rem 5%; }
   .section-label {
@@ -142,7 +142,7 @@
     color: var(--text); margin-bottom: 1rem;
   }
   .section-sub { font-size: 1rem; color: var(--text-muted); max-width: 520px; line-height: 1.7; }
-
+ 
   /* HOW IT WORKS */
   .how { background: var(--bg2); }
   .steps {
@@ -164,7 +164,7 @@
   }
   .step h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
   .step p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
-
+ 
   /* SERVICES */
   .services-grid {
     display: grid;
@@ -227,7 +227,7 @@
     padding: 3px 10px; border-radius: 50px;
     text-transform: uppercase;
   }
-
+ 
   /* TESTIMONIALS */
   .testimonials { background: var(--bg2); }
   .reviews-grid {
@@ -252,7 +252,7 @@
   }
   .reviewer-name { font-size: 0.88rem; font-weight: 500; color: var(--text); }
   .reviewer-role { font-size: 0.78rem; color: var(--text-muted); }
-
+ 
   /* WHATSAPP BOT */
   .bot-section {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -297,7 +297,7 @@
     text-align: left;
   }
   .msg-opt:hover { background: rgba(29,158,117,0.2); }
-
+ 
   /* CONTACT */
   .contact { background: var(--bg2); }
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
@@ -331,7 +331,7 @@
     padding: 1.5rem; text-align: center;
   }
   .wsp-banner p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; }
-
+ 
   /* FOOTER */
   footer {
     border-top: 1px solid var(--border);
@@ -343,7 +343,7 @@
   .footer-links { display: flex; gap: 1.5rem; }
   .footer-links a { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .footer-links a:hover { color: var(--green); }
-
+ 
   /* FLOATING WA */
   .wsp-float {
     position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
@@ -363,7 +363,7 @@
     pointer-events: none; opacity: 0; transition: opacity 0.2s;
   }
   .wsp-float:hover .wsp-tooltip { opacity: 1; }
-
+ 
   /* ANIMATIONS */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   .fade-up { animation: fadeUp 0.6s ease both; }
@@ -371,7 +371,7 @@
   .delay-2 { animation-delay: 0.2s; }
   .delay-3 { animation-delay: 0.3s; }
   .delay-4 { animation-delay: 0.4s; }
-
+ 
   /* RESPONSIVE */
   @media (max-width: 768px) {
     html, body { overflow-x: hidden; max-width: 100vw; }
@@ -415,7 +415,7 @@
 </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav>
   <div class="logo">Fl<span>o</span>wi</div>
@@ -430,7 +430,7 @@
     <span></span><span></span><span></span>
   </div>
 </nav>
-
+ 
 <!-- HERO -->
 <section class="hero" id="inicio">
   <div class="hero-bg"></div>
@@ -469,7 +469,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- CÓMO FUNCIONA -->
 <section class="how" id="como-funciona">
   <span class="section-label">El proceso</span>
@@ -498,15 +498,14 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- SERVICIOS -->
 <section id="servicios">
   <span class="section-label">Lo que hacemos</span>
   <h2 class="section-title">Nuestros servicios</h2>
   <p class="section-sub">Desde un bot de WhatsApp hasta una tienda online. Cada solución, a la medida de tu negocio.</p>
   <div class="services-grid">
-    <div class="service-card featured">
-      <span class="service-tag">Más pedido</span>
+    <div class="service-card">
       <div class="service-icon">🤖</div>
       <h3>Bot de WhatsApp</h3>
       <p>Atención automática 24/7 con menú de opciones, captura de datos, confirmación de reservas y derivación a humano cuando sea necesario.</p>
@@ -518,7 +517,8 @@
       </ul>
       <div class="service-price">Desde USD 80</div>
     </div>
-    <div class="service-card">
+    <div class="service-card featured">
+      <span class="service-tag">Más pedido</span>
       <div class="service-icon">⚙️</div>
       <h3>Sistemas de gestión personalizados</h3>
       <p>Diseñamos e implementamos el sistema que tu negocio necesita. Reservas, turnos, inventarios, clientes, todo a tu medida.</p>
@@ -564,7 +564,7 @@
         <li>Ajustes y mejoras mensuales</li>
         <li>Monitoreo de flujos</li>
       </ul>
-      <div class="service-price">Desde USD 30 / mes</div>
+      <div class="service-price">Precio variable según proyecto</div>
     </div>
     <div class="service-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height: 200px;">
       <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem;">¿Tenés un proceso específico en mente?</p>
@@ -572,7 +572,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- BOT WHATSAPP DEMO -->
 <section id="bot-demo" style="background: var(--bg2);">
   <div class="bot-section">
@@ -622,7 +622,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- RESEÑAS -->
 <section class="testimonials" id="resenas">
   <span class="section-label">Reseñas</span>
@@ -664,7 +664,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- CONTACTO -->
 <section class="contact" id="contacto">
   <span class="section-label">Contacto</span>
@@ -743,7 +743,7 @@
     </div>
   </div>
 </section>
-
+ 
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Flowi</div>
@@ -754,13 +754,13 @@
     <a href="#contacto">Contacto</a>
   </div>
 </footer>
-
+ 
 <!-- WHATSAPP FLOTANTE -->
 <a href="https://wa.me/543413487910?text=Hola%20Flowi%2C%20quiero%20info%20sobre%20automatizaci%C3%B3n" class="wsp-float" target="_blank">
   <span class="wsp-tooltip">Hablanos por WhatsApp</span>
   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.782-1.388A9.948 9.948 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm-3.11 5.41c.21 0 .44.003.63.48.22.56.76 1.86.83 2 .07.14.11.3.02.48-.09.18-.14.3-.27.45-.14.16-.29.35-.41.47-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.16-.19.7-.81.88-1.09.19-.28.37-.23.63-.14.25.1 1.61.76 1.89.9.28.14.46.21.53.32.07.12.07.65-.16 1.27-.23.63-1.34 1.2-1.86 1.27-.52.08-1 .14-3.22-.67-2.68-1-4.36-3.69-4.49-3.86-.13-.17-1.07-1.43-1.07-2.73 0-1.3.68-1.94.92-2.2.24-.27.53-.33.7-.33z" fill="#fff"></path></svg>
 </a>
-
+ 
 <script>
 function toggleMenu() {
   const links = document.querySelector('.nav-links');
@@ -770,7 +770,7 @@ function toggleMenu() {
     links.style.cssText = 'display:flex; flex-direction:column; position:absolute; top:60px; left:0; right:0; background:var(--bg); padding:1rem 5%; border-bottom:1px solid var(--border); gap:1rem; z-index:99;';
   }
 }
-
+ 
 const botReplies = {
   1: {
     user: "🎾 Reservar una cancha",
@@ -793,7 +793,7 @@ const botReplies = {
     opts: null
   }
 };
-
+ 
 function botReply(n) {
   const body = document.getElementById('bot-demo-body');
   const r = botReplies[n];
@@ -801,13 +801,13 @@ function botReply(n) {
   // Remove options
   body.querySelectorAll('.msg-options').forEach(o => o.remove());
   body.querySelectorAll('.msg-opt').forEach(o => o.disabled = true);
-
+ 
   // User message
   const userMsg = document.createElement('div');
   userMsg.className = 'msg msg-user';
   userMsg.textContent = r.user;
   body.appendChild(userMsg);
-
+ 
   // Bot typing
   setTimeout(() => {
     const botMsg = document.createElement('div');
@@ -815,7 +815,7 @@ function botReply(n) {
     botMsg.style.whiteSpace = 'pre-line';
     botMsg.textContent = r.bot;
     body.appendChild(botMsg);
-
+ 
     if (r.opts) {
       const opts = document.createElement('div');
       opts.className = 'msg-options';
@@ -844,7 +844,7 @@ function botReply(n) {
   }, 500);
   body.scrollTop = body.scrollHeight;
 }
-
+ 
 function submitForm(e) {
   e.preventDefault();
   const nombre = document.getElementById('f-nombre').value;
@@ -867,7 +867,7 @@ function submitForm(e) {
     window.open('https://wa.me/543413487910?text=' + texto, '_blank');
   }, 500);
 }
-
+ 
 // Scroll reveal
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -877,7 +877,7 @@ const observer = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1 });
-
+ 
 document.querySelectorAll('.service-card, .review-card, .step').forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(20px)';
