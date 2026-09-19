@@ -1,9 +1,22 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoFlowi — Hecho a tu medida. No al revés.</title>
+<title>Flowi — Automatización a medida para pymes</title>
+<meta name="description" content="Automatizamos los procesos que te roban tiempo: bots de WhatsApp, sistemas de gestión a medida (incluido FlowiGest para barberías), formularios con QR y landing pages. Sin programar, con resultados desde el día uno.">
+<link rel="canonical" href="https://autoflowi.com/">
+<meta name="theme-color" content="#0A0F0D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0F0D'/%3E%3Ccircle cx='32' cy='32' r='16' fill='none' stroke='%231D9E75' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%231D9E75'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flowi">
+<meta property="og:title" content="Flowi — Automatización a medida para pymes">
+<meta property="og:description" content="Bots de WhatsApp, sistemas de gestión a medida (FlowiGest para barberías), formularios con QR y landing pages. Sin programar, con resultados desde el día uno.">
+<meta property="og:url" content="https://autoflowi.com/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flowi — Automatización a medida para pymes">
+<meta name="twitter:description" content="Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -66,10 +79,15 @@
   /* HERO */
   .hero {
     min-height: 100vh;
-    display: flex; align-items: center;
+    display: grid; align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 3rem;
     padding: 7rem 5% 5rem;
     position: relative;
     overflow: hidden;
+  }
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; }
   }
   .hero-bg {
     position: absolute; inset: 0; z-index: 0;
@@ -85,13 +103,151 @@
     mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
     will-change: transform;
   }
-  .hero-3d {
-    position: fixed; inset: 0; z-index: -1;
-    opacity: 0; transition: opacity 1.2s ease 0.3s;
+  /* Fondo del hero: rutas de proceso dibujadas en canvas, con pulsos que
+     viajan por ellas. Pesa 0 KB y, a diferencia del video, no se arruina
+     cuando le ponemos contenido encima: esta pensado para quedar debajo. */
+  .hero-flow {
+    position: absolute; inset: 0; z-index: 0;
+    width: 100%; height: 100%;
+    opacity: 0; transition: opacity 1.2s ease;
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 62% 45%, #000 18%, transparent 80%);
+    mask-image: radial-gradient(ellipse 90% 80% at 62% 45%, #000 18%, transparent 80%);
   }
-  .hero-3d.is-ready { opacity: 1; }
-  .hero-3d canvas { display: block; width: 100%; height: 100%; }
+  .hero-flow.is-ready { opacity: 1; }
+  /* El mismo fondo, para las secciones de mas abajo */
+  .flow-bg {
+    position: absolute; inset: 0; z-index: 0;
+    width: 100%; height: 100%; pointer-events: none;
+    opacity: 0; transition: opacity 1.2s ease;
+    -webkit-mask-image: radial-gradient(ellipse 95% 85% at 50% 50%, #000 22%, transparent 86%);
+    mask-image: radial-gradient(ellipse 95% 85% at 50% 50%, #000 22%, transparent 86%);
+  }
+  .flow-bg.is-ready { opacity: 0.6; }
+  .tiene-flow { position: relative; overflow: hidden; }
+  .tiene-flow > *:not(.flow-bg) { position: relative; z-index: 1; }
+  /* Velo que mantiene legible el titulo sobre el fondo */
+  .hero-veil {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: linear-gradient(90deg, rgba(10,15,13,0.94) 0%, rgba(10,15,13,0.6) 40%, rgba(10,15,13,0) 72%),
+                linear-gradient(to bottom, rgba(10,15,13,0.4) 0%, transparent 28%, var(--bg) 100%);
+  }
   .hero-content { position: relative; z-index: 1; max-width: 660px; }
+
+  /* ==========================================================
+     Bolillero del hero. Es un juego de verdad: el resultado se
+     sortea al azar con los pesos que estan en PREMIOS (abajo, en
+     el script) y todo lo que puede salir es algo que podemos
+     cumplir. La reunion con prototipo es la que sale poco; el
+     resto sale seguido y "tira de nuevo" mantiene la rueda girando.
+     ========================================================== */
+  .bolillero {
+    position: relative; z-index: 1;
+    width: 340px; max-width: 100%;
+    background: rgba(10,15,13,0.74);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 1.5rem 1.4rem 1.3rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    text-align: center;
+  }
+  .bol-titulo {
+    font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
+    color: var(--text); margin-bottom: 0.3rem;
+  }
+  .bol-bajada { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.9rem; line-height: 1.5; }
+
+  .bol-maquina { position: relative; height: 250px; margin-bottom: 0.9rem; cursor: pointer; touch-action: pan-y; }
+
+  /* El tambor */
+  .bol-tambor-pos { position: absolute; left: 50%; top: 0; margin-left: -89px; width: 178px; height: 178px; }
+  .bol-tambor {
+    position: absolute; inset: 0; border-radius: 50%;
+    background:
+      radial-gradient(circle at 35% 28%, rgba(255,255,255,0.12), transparent 55%),
+      radial-gradient(circle at 50% 50%, rgba(29,158,117,0.10), rgba(10,15,13,0.92) 70%);
+    border: 3px solid rgba(29,158,117,0.35);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 34px rgba(29,158,117,0.16);
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  /* Los alambres de la jaula, girando despacio todo el tiempo */
+  .bol-tambor::before {
+    content: ''; position: absolute; inset: 6px; border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgba(159,225,203,0.16) 0deg 1.2deg, transparent 1.2deg 22deg);
+    animation: bolAlambres 90s linear infinite;
+  }
+  @keyframes bolAlambres { to { transform: rotate(360deg); } }
+  .bol-maquina:hover .bol-tambor {
+    border-color: rgba(29,158,117,0.6);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 46px rgba(29,158,117,0.3);
+  }
+
+  /* Las bolillas van en su propia capa: el tambor gira, pero los numeros
+     nunca quedan patas para arriba. */
+  .bol-bolas { position: absolute; inset: 0; pointer-events: none; }
+  .bol-bola {
+    position: absolute; width: 27px; height: 27px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: inset -2px -3px 6px rgba(0,0,0,0.28), 0 2px 6px rgba(0,0,0,0.5);
+    will-change: transform;
+  }
+  .bol-bola i {
+    width: 17px; height: 17px; border-radius: 50%;
+    background: rgba(255,255,255,0.93);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-style: normal; font-weight: 800;
+    font-size: 0.6rem; line-height: 1; color: #0A0F0D;
+    box-shadow: inset 0 -1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* El tubo por donde cae y la bandeja */
+  .bol-tubo {
+    position: absolute; left: 50%; top: 176px; margin-left: -15px;
+    width: 30px; height: 30px;
+    background: linear-gradient(90deg, rgba(29,158,117,0.25), rgba(29,158,117,0.08), rgba(29,158,117,0.25));
+    border-left: 1px solid var(--border-strong); border-right: 1px solid var(--border-strong);
+  }
+  .bol-bandeja {
+    position: absolute; left: 50%; bottom: 0; margin-left: -95px;
+    width: 190px; height: 36px;
+    background: linear-gradient(180deg, rgba(29,158,117,0.16), rgba(10,15,13,0.9));
+    border: 1px solid var(--border-strong);
+    border-radius: 0 0 60px 60px / 0 0 28px 28px;
+  }
+  /* La bolilla que sale: hereda .bol-bola, solo cambia donde vive */
+  .bol-salida {
+    left: 50%; top: 176px; margin-left: -13.5px;
+    z-index: 2; opacity: 0;
+    box-shadow: inset -2px -3px 6px rgba(0,0,0,0.28), 0 4px 12px rgba(0,0,0,0.6);
+  }
+
+  .bol-boton {
+    width: 100%; background: var(--green); color: #fff;
+    border: none; border-radius: 50px; padding: 0.8rem 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 0 26px rgba(29,158,117,0.3);
+  }
+  .bol-boton:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 34px rgba(29,158,117,0.42); }
+  .bol-boton:disabled { opacity: 0.55; cursor: default; }
+
+  .bol-resultado { display: none; }
+  .bol-resultado.is-visible { display: block; }
+  .bol-premio {
+    font-family: 'Syne', sans-serif; font-size: 1.02rem; font-weight: 700;
+    color: var(--green-light); line-height: 1.3; margin-bottom: 0.4rem;
+  }
+  .bol-detalle { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1rem; }
+  .bol-reset {
+    background: none; border: none; padding: 0; margin-top: 0.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+    color: var(--text-muted); text-decoration: underline; cursor: pointer;
+  }
+
+  @media (max-width: 1000px) {
+    .bolillero { width: 100%; max-width: 360px; margin: 0 auto; }
+  }
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(29,158,117,0.12); border: 1px solid var(--border-strong);
@@ -154,20 +310,66 @@
   }
   .section-sub { font-size: 1rem; color: var(--text-muted); max-width: 520px; line-height: 1.7; }
 
-  /* HOW IT WORKS */
-  .how { background: var(--bg2-t); }
-  .steps {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0; margin-top: 3.5rem;
-    border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  /* ==========================================================
+     Carrusel horizontal. Usa scroll-snap nativo en vez de mover un
+     track con transform: el swipe tactil, el teclado y la inercia
+     vienen gratis, y no hay que calcular anchos a mano.
+     ========================================================== */
+  .car { position: relative; margin-top: 3.5rem; }
+  .car-track {
+    display: flex; gap: 1rem;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none; -ms-overflow-style: none;
+    padding-bottom: 0.4rem;
   }
+  .car-track::-webkit-scrollbar { display: none; }
+  /* Cada diapositiva ocupa el ancho entero: el carrusel alterna entre
+     "El proceso" y "Nuestros servicios", no entre tarjetas sueltas. */
+  .car-track > * { flex: 0 0 100%; scroll-snap-align: start; }
+  .dual-slide { min-width: 0; }
+  /* Las dos diapositivas quedan de la misma altura (flex estira por defecto),
+     asi el alto de la seccion no salta cuando cambia sola. */
+  .slide-grid {
+    display: grid; gap: 1rem; margin-top: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  }
+  .slide-grid > * { border: 1px solid var(--border); border-radius: 16px; }
+  .slide-nota { margin-top: 1.6rem; font-size: 0.88rem; color: var(--text-muted); }
+  .slide-nota a { color: var(--green-light); text-decoration: none; }
+
+  .car-dots { display: flex; gap: 8px; justify-content: center; margin-top: 1.6rem; }
+  .car-dot {
+    width: 8px; height: 8px; border-radius: 50%; padding: 0;
+    border: 1px solid var(--border-strong); background: transparent;
+    cursor: pointer; transition: background 0.25s, width 0.25s, border-color 0.25s;
+  }
+  .car-dot.is-active { width: 22px; border-radius: 50px; background: var(--green); border-color: var(--green); }
+
+  .car-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    z-index: 5; width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(10,15,13,0.85); backdrop-filter: blur(8px);
+    border: 1px solid var(--border-strong); color: var(--text);
+    font-size: 1.3rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+  }
+  .car-arrow:hover { background: var(--green); border-color: var(--green); }
+  .car-prev { left: -18px; }
+  .car-next { right: -18px; }
+  @media (max-width: 860px) {
+    .car-prev { left: 2px; }
+    .car-next { right: 2px; }
+  }
+
+  /* HOW IT WORKS */
   .step {
     padding: 2rem 1.8rem;
-    border-right: 1px solid var(--border);
     position: relative;
     transition: background 0.2s;
   }
-  .step:last-child { border-right: none; }
   .step:hover { background: rgba(29,158,117,0.05); }
   .step-num {
     font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800;
@@ -177,15 +379,8 @@
   .step p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
 
   /* SERVICES */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1px; margin-top: 3.5rem;
-    background: var(--border);
-    border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
-  }
   .service-card {
-    background: var(--bg);
+    background: var(--bg2);
     padding: 2rem 1.8rem;
     transition: background 0.2s;
     position: relative;
@@ -221,31 +416,6 @@
     padding: 3px 10px; border-radius: 50px;
     text-transform: uppercase;
   }
-
-  /* TESTIMONIALS */
-  .testimonials { background: var(--bg2-t); }
-  .reviews-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem; margin-top: 3rem;
-  }
-  .review-card {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1.5rem;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .review-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
-  .stars { color: var(--green); font-size: 0.9rem; margin-bottom: 1rem; letter-spacing: 2px; }
-  .review-text { font-size: 0.93rem; color: var(--text); line-height: 1.7; margin-bottom: 1.2rem; font-style: italic; }
-  .reviewer { display: flex; align-items: center; gap: 10px; }
-  .reviewer-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(29,158,117,0.2); border: 1px solid var(--border-strong);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 600; color: var(--green-light);
-    font-family: 'Syne', sans-serif;
-  }
-  .reviewer-name { font-size: 0.88rem; font-weight: 500; color: var(--text); }
-  .reviewer-role { font-size: 0.78rem; color: var(--text-muted); }
 
   /* WHATSAPP BOT */
   .bot-section {
@@ -291,6 +461,90 @@
     text-align: left;
   }
   .msg-opt:hover { background: rgba(29,158,117,0.2); }
+  .msg-opt:disabled { opacity: 0.45; cursor: default; }
+  .demo-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .demo-chip {
+    background: rgba(29,158,117,0.08); border: 1px solid var(--border);
+    color: var(--text-muted); padding: 0.45rem 1rem; border-radius: 50px;
+    font-size: 0.82rem; font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .demo-chip:hover { border-color: var(--border-strong); color: var(--text); }
+  .demo-chip.active { background: var(--green); border-color: var(--green); color: #fff; }
+  .typing {
+    display: flex; gap: 4px; align-items: center; align-self: flex-start;
+    background: var(--bg3); padding: 0.8rem 1rem;
+    border-radius: 12px; border-bottom-left-radius: 4px;
+  }
+  .typing i { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: blink 1.4s infinite both; }
+  .typing i:nth-child(2) { animation-delay: 0.2s; }
+  .typing i:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity: 0.25; } 40% { opacity: 1; } }
+  .bot-foot {
+    padding: 0.7rem 1.2rem; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .bot-foot-note { font-size: 0.72rem; color: var(--text-muted); }
+  .demo-restart {
+    background: none; border: none; color: var(--green-light);
+    font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; padding: 0; text-decoration: underline;
+  }
+
+  /* FLOWIGEST */
+  #flowigest { position: relative; overflow: hidden; }
+  .gest-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: url(media/flowigest-bg.jpg) center center/cover no-repeat;
+  }
+  /* El velo tapa la foto sobre la columna de texto y la deja abrirse a la
+     derecha, que es donde apoyan la laptop y el celular. */
+  .gest-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, var(--bg) 5%, rgba(10,15,13,0.78) 36%, rgba(10,15,13,0.22) 100%);
+  }
+  .gest-section { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .gest-features { display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0 2rem; }
+  .gest-feature { display: flex; align-items: flex-start; gap: 12px; }
+  .gest-feature-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .gest-feature span { font-size: 0.9rem; color: var(--text-muted); }
+  /* La escena de la laptop y el celular es una toma renderizada con las
+     grabaciones reales incrustadas en las pantallas: da el 3D y el
+     realismo que los marcos dibujados con CSS no alcanzaban a dar. */
+  .mock { position: relative; }
+  /* El video no tiene fondo. La mascara de abajo es la silueta de la laptop
+     y el celular dibujada en SVG: afuera de esa silueta no se pinta nada y
+     se ve la foto de la barberia, que es el fondo de la seccion (.gest-bg).
+     Alcanza con una silueta fija porque al video se le cancelo el zoom de
+     camara, asi que los equipos no se mueven en los 20 segundos. Las dos
+     elipses de arriba del SVG son el reflejo sobre el marmol: sin eso los
+     equipos parecen pegoteados. Va embebida y no como archivo .png porque
+     un PNG servido aparte no se aplica como mascara en todos los motores. */
+  .escena { position: relative; }
+  .escena video {
+    display: block; width: 100%;
+    aspect-ratio: 1040 / 620;
+    object-fit: cover;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1040 620%22 preserveAspectRatio=%22none%22%3E%3Cdefs%3E%3CradialGradient id=%22r%22 cx=%22.5%22 cy=%220%22 r=%221%22 gradientTransform=%22scale%281 .5%29%22%3E%3Cstop offset=%220%22 stop-color=%22%23fff%22 stop-opacity=%22.45%22/%3E%3Cstop offset=%221%22 stop-color=%22%23fff%22 stop-opacity=%220%22/%3E%3C/radialGradient%3E%3Cfilter id=%22s%22 x=%22-5%25%22 y=%22-5%25%22 width=%22110%25%22 height=%22110%25%22%3E%3CfeGaussianBlur stdDeviation=%221.7%22/%3E%3C/filter%3E%3C/defs%3E%3Cellipse cx=%22405%22 cy=%22546%22 rx=%22320%22 ry=%2262%22 fill=%22url%28%23r%29%22/%3E%3Cellipse cx=%22855%22 cy=%22527%22 rx=%2262%22 ry=%2234%22 fill=%22url%28%23r%29%22/%3E%3Cg fill=%22%23fff%22 filter=%22url%28%23s%29%22%3E%3Crect x=%22138%22 y=%2291%22 width=%22559%22 height=%22371%22 rx=%2210%22/%3E%3Cpath d=%22M122 452H708L753 548H52Z%22/%3E%3Crect x=%2252%22 y=%22534%22 width=%22701%22 height=%2216%22 rx=%227%22/%3E%3Crect x=%22776%22 y=%22230%22 width=%22152%22 height=%22299%22 rx=%2219%22/%3E%3C/g%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1040 620%22 preserveAspectRatio=%22none%22%3E%3Cdefs%3E%3CradialGradient id=%22r%22 cx=%22.5%22 cy=%220%22 r=%221%22 gradientTransform=%22scale%281 .5%29%22%3E%3Cstop offset=%220%22 stop-color=%22%23fff%22 stop-opacity=%22.45%22/%3E%3Cstop offset=%221%22 stop-color=%22%23fff%22 stop-opacity=%220%22/%3E%3C/radialGradient%3E%3Cfilter id=%22s%22 x=%22-5%25%22 y=%22-5%25%22 width=%22110%25%22 height=%22110%25%22%3E%3CfeGaussianBlur stdDeviation=%221.7%22/%3E%3C/filter%3E%3C/defs%3E%3Cellipse cx=%22405%22 cy=%22546%22 rx=%22320%22 ry=%2262%22 fill=%22url%28%23r%29%22/%3E%3Cellipse cx=%22855%22 cy=%22527%22 rx=%2262%22 ry=%2234%22 fill=%22url%28%23r%29%22/%3E%3Cg fill=%22%23fff%22 filter=%22url%28%23s%29%22%3E%3Crect x=%22138%22 y=%2291%22 width=%22559%22 height=%22371%22 rx=%2210%22/%3E%3Cpath d=%22M122 452H708L753 548H52Z%22/%3E%3Crect x=%2252%22 y=%22534%22 width=%22701%22 height=%2216%22 rx=%227%22/%3E%3Crect x=%22776%22 y=%22230%22 width=%22152%22 height=%22299%22 rx=%2219%22/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  .mock-caption {
+    margin-top: 1rem; font-size: 0.78rem; color: var(--text-muted); text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .gest-section { grid-template-columns: 1fr; gap: 2rem; }
+    .mock { max-width: 100%; }
+    /* Apilado en una columna el texto cae sobre la foto entera, asi que
+       el velo va parejo en vez de abrirse hacia la derecha. */
+    .gest-bg::after {
+      background: linear-gradient(180deg, rgba(10,15,13,0.88) 0%, rgba(10,15,13,0.66) 100%);
+    }
+  }
 
   /* CONTACT */
   .contact { background: var(--bg2-t); }
@@ -386,7 +640,6 @@
     .bot-section { grid-template-columns: 1fr; gap: 2rem; }
     .bot-chat { max-width: 100%; }
     .msg { max-width: 85%; font-size: 0.82rem; }
-    .reviews-grid { grid-template-columns: 1fr; }
     .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
     .contact-form div[style*="grid-template-columns"] { display: flex !important; flex-direction: column; gap: 1rem; }
     footer { flex-direction: column; text-align: center; gap: 0.8rem; padding: 1.5rem 5%; }
@@ -397,16 +650,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .hero-3d { display: none; }
+    .car-track { scroll-behavior: auto; }
     .fade-up { animation: none; opacity: 1 !important; transform: none !important; }
     .scroll-progress { transition: none; }
   }
 </style>
 </head>
 <body>
-
-<!-- 3D BACKGROUND (full page) -->
-<div class="hero-3d" id="hero3d"></div>
 
 <!-- SCROLL PROGRESS -->
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -415,9 +665,10 @@
 <nav>
   <div class="logo">Fl<span>o</span>wi</div>
   <ul class="nav-links">
+    <li><a href="#flowigest">Barberías</a></li>
+    <li><a href="#bot-demo">Bot WhatsApp</a></li>
     <li><a href="#como-funciona">Cómo funciona</a></li>
-    <li><a href="#servicios">Servicios</a></li>
-    <li><a href="#resenas">Reseñas</a></li>
+    <li><a href="#como-funciona" data-ver-servicios="1">Servicios</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
   <div class="hamburger" onclick="toggleMenu()">
@@ -427,8 +678,10 @@
 
 <!-- HERO -->
 <section class="hero" id="inicio">
+  <canvas class="hero-flow" id="heroFlow" data-flow aria-hidden="true"></canvas>
   <div class="hero-bg" data-parallax="0.15"></div>
   <div class="hero-grid" data-parallax="0.3"></div>
+  <div class="hero-veil"></div>
   <div class="hero-content">
     <div class="hero-badge fade-up">
       <span class="hero-badge-dot"></span>
@@ -438,10 +691,11 @@
       Hecho a tu medida.<br><span class="accent">No al revés.</span>
     </h1>
     <p class="hero-sub fade-up delay-2">
-      Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones, con resultados desde el día uno.
+      Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones, con un plan claro desde la primera reunión.
     </p>
     <div class="hero-actions fade-up delay-3">
-      <a href="#servicios" class="btn-secondary">Ver servicios →</a>
+      <a href="#flowigest" class="btn-primary">Sistema para barberías →</a>
+      <a href="#bot-demo" class="btn-secondary">Probá el bot en vivo →</a>
     </div>
     <div class="hero-stats fade-up delay-4">
       <div>
@@ -449,8 +703,8 @@
         <div class="stat-label">Procesos automatizados</div>
       </div>
       <div>
-        <div class="stat-num">48hs</div>
-        <div class="stat-label">Tiempo de implementación</div>
+        <div class="stat-num">8 a 12</div>
+        <div class="stat-label">Semanas de implementación</div>
       </div>
       <div>
         <div class="stat-num">100%</div>
@@ -458,112 +712,72 @@
       </div>
     </div>
   </div>
-</section>
 
-<!-- CÓMO FUNCIONA -->
-<section class="how" id="como-funciona">
-  <span class="section-label">El proceso</span>
-  <h2 class="section-title">Simple, rápido y a medida</h2>
-  <p class="section-sub">Relevamos tu negocio, diseñamos la solución y la dejamos funcionando. Sin tecnicismos.</p>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h3>Charla inicial</h3>
-      <p>Entendemos tu negocio, cómo lo manejás hoy y dónde perdés tiempo. Sin costo, sin compromiso.</p>
+  <div class="bolillero fade-up delay-2" id="bolillero">
+    <div class="bol-titulo">Girá el bolillero</div>
+    <div class="bol-bajada" id="bolBajada">Girá el bolillero y fijate con qué te vas.</div>
+
+    <div class="bol-maquina" id="bolMaquina">
+      <div class="bol-tambor-pos">
+        <div class="bol-tambor" id="bolTambor"></div>
+        <div class="bol-bolas" id="bolBolas"></div>
+      </div>
+      <div class="bol-tubo"></div>
+      <div class="bol-bandeja"></div>
+      <div class="bol-bola bol-salida" id="bolSalida"><i id="bolSalidaNum"></i></div>
     </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h3>Relevamiento</h3>
-      <p>Analizamos tus procesos actuales y definimos qué se puede automatizar con mayor impacto.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h3>Implementación</h3>
-      <p>Configuramos la solución con herramientas no-code. Rápido, probado y sin sorpresas.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <h3>Entrega y soporte</h3>
-      <p>Te mostramos cómo funciona todo y quedamos disponibles para ajustes y mejoras continuas.</p>
+
+    <button class="bol-boton" type="button" id="bolBoton">Girar</button>
+
+    <div class="bol-resultado" id="bolResultado" aria-live="polite">
+      <div class="bol-premio" id="bolPremio"></div>
+      <div class="bol-detalle" id="bolDetalle"></div>
+      <a class="bol-boton" id="bolWsp" target="_blank" rel="noopener" href="#"
+         style="display:block; text-decoration:none;">Reclamar por WhatsApp →</a>
+      <button class="bol-boton" type="button" id="bolOtra">Tirá de nuevo</button>
+      <button class="bol-reset" type="button" id="bolReset">Empezar de nuevo</button>
     </div>
   </div>
 </section>
 
-<!-- SERVICIOS -->
-<section id="servicios">
-  <span class="section-label">Lo que hacemos</span>
-  <h2 class="section-title">Nuestros servicios</h2>
-  <p class="section-sub">Desde un bot de WhatsApp hasta una tienda online. Cada solución, a la medida de tu negocio.</p>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon">🤖</div>
-      <h3>Bot de WhatsApp</h3>
-      <p>Atención automática 24/7 con menú de opciones, captura de datos, confirmación de reservas y derivación a humano cuando sea necesario.</p>
-      <ul class="service-features">
-        <li>Configuración completa del flujo</li>
-        <li>Menú interactivo personalizado</li>
-        <li>Integración con tu agenda o sistema</li>
-        <li>Pruebas y ajustes incluidos</li>
-      </ul>
+<!-- FLOWIGEST -->
+<section id="flowigest" style="background: var(--bg2-t);">
+  <div class="gest-bg"></div>
+  <div class="gest-section">
+    <div>
+      <span class="section-label">Sistemas a medida para barberías</span>
+      <h2 class="section-title">Probá FlowiGest,<br>nuestro sistema para barberías</h2>
+      <p class="section-sub" style="margin-bottom:0;">Tus clientes reservan solos, tus barberos ven su agenda desde el celular y vos controlás la caja desde la compu. Sin planillas y sin cuentas a mano a fin de semana.</p>
+      <div class="gest-features">
+        <div class="gest-feature"><div class="gest-feature-dot"></div><span>Reserva de turnos online, sin que nadie atienda el teléfono</span></div>
+        <div class="gest-feature"><div class="gest-feature-dot"></div><span>Confirmación y recordatorio automáticos por WhatsApp</span></div>
+        <div class="gest-feature"><div class="gest-feature-dot"></div><span>Liquidaciones automáticas de comisiones por barbero</span></div>
+        <div class="gest-feature"><div class="gest-feature-dot"></div><span>Control de caja, gastos, adelantos y bonos</span></div>
+        <div class="gest-feature"><div class="gest-feature-dot"></div><span>Multi-sucursal, reportes financieros y auditoría de cambios</span></div>
+      </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+        <a href="https://wa.me/543413487910?text=Hola%20Flowi%2C%20quiero%20empezar%20una%20demo%20de%20FlowiGest%20para%20mi%20barber%C3%ADa" target="_blank" rel="noopener" class="btn-primary">Quiero empezar una demo →</a>
+        <a href="#contacto" class="btn-secondary">Lo quiero a medida</a>
+      </div>
     </div>
-    <div class="service-card featured">
-      <span class="service-tag">Más pedido</span>
-      <div class="service-icon">⚙️</div>
-      <h3>Sistemas de gestión personalizados</h3>
-      <p>Diseñamos e implementamos el sistema que tu negocio necesita. Reservas, turnos, inventarios, clientes, todo a tu medida.</p>
-      <ul class="service-features">
-        <li>Relevamiento y diseño previo</li>
-        <li>Implementación no-code</li>
-        <li>Capacitación del equipo</li>
-        <li>Opción de suscripción mensual disponible</li>
-      </ul>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">📋</div>
-      <h3>Formularios, QR y encuestas</h3>
-      <p>Formularios digitales inteligentes con QR para registros, check-in, encuestas de satisfacción y captura de datos — sin papel, sin carga manual.</p>
-      <ul class="service-features">
-        <li>QR inteligente para tu local o evento</li>
-        <li>Formularios de registro y check-in</li>
-        <li>Encuestas de satisfacción post-visita</li>
-        <li>Datos directo a Google Sheets o CRM</li>
-      </ul>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">🌐</div>
-      <h3>Landing page y tiendas online</h3>
-      <p>Tu presencia web profesional lista para vender. Landing pages que convierten o tiendas online con catálogo, carrito y medios de pago.</p>
-      <ul class="service-features">
-        <li>Diseño a medida de tu marca</li>
-        <li>Dominio, hosting y SSL (no incluidos)</li>
-        <li>Integración con WhatsApp y medios de pago</li>
-        <li>Optimizada para mobile y Google</li>
-      </ul>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">🔄</div>
-      <h3>Mantenimiento mensual</h3>
-      <p>Soporte continuo, ajustes, mejoras y monitoreo. Tu solución siempre funcionando al 100%.</p>
-      <ul class="service-features">
-        <li>Soporte por WhatsApp</li>
-        <li>Ajustes y mejoras mensuales</li>
-        <li>Monitoreo de flujos</li>
-      </ul>
-    </div>
-    <div class="service-card" style="display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; min-height: 200px;">
-      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem;">¿Tenés un proceso específico en mente?</p>
-      <a href="#contacto" class="btn-secondary" style="font-size:0.88rem;">Consultanos →</a>
+    <div class="mock">
+      <div class="escena">
+        <video id="gestEscena" muted loop playsinline preload="none"
+               poster="media/escena-poster.jpg" aria-hidden="true"></video>
+      </div>
+      <p class="mock-caption">El panel del admin en la compu y la app del barbero en el celular</p>
     </div>
   </div>
 </section>
 
 <!-- BOT WHATSAPP DEMO -->
-<section id="bot-demo" style="background: var(--bg2-t);">
+<section id="bot-demo">
   <div class="bot-section">
     <div>
-      <span class="section-label">Bot de WhatsApp</span>
-      <h2 class="section-title">Atención automática,<br>trato humano</h2>
-      <p class="section-sub" style="margin-bottom:2rem;">Tus clientes consultan a cualquier hora y reciben respuesta al instante. Vos te enterás solo cuando es necesario.</p>
+      <span class="section-label">Probalo vos mismo</span>
+      <h2 class="section-title">Así atiende tu negocio<br>mientras vos no estás</h2>
+      <p class="section-sub" style="margin-bottom:1.5rem;">Elegí tu rubro y hablá con el bot como lo haría un cliente tuyo. Es el mismo flujo que implementamos, funcionando.</p>
+      <div class="demo-chips" id="demo-chips"></div>
       <div style="display:flex; flex-direction:column; gap:1rem;">
         <div style="display:flex; align-items:center; gap:12px;">
           <div style="width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
@@ -588,69 +802,127 @@
     </div>
     <div class="bot-chat">
       <div class="bot-header">
-        <div class="bot-avatar">⚡</div>
+        <div class="bot-avatar" id="bot-avatar">💈</div>
         <div>
-          <div class="bot-name">Flowi Bot · Complejo El Pádel</div>
+          <div class="bot-name" id="bot-name">Flowi Bot</div>
           <div class="bot-status">En línea</div>
         </div>
       </div>
-      <div class="bot-body" id="bot-demo-body">
-        <div class="msg msg-bot">¡Hola! 👋 Soy el asistente de <b>El Pádel</b>. ¿En qué te puedo ayudar?</div>
-        <div class="msg-options">
-          <button class="msg-opt" onclick="botReply(1)">🎾 Reservar una cancha</button>
-          <button class="msg-opt" onclick="botReply(2)">💰 Ver precios y horarios</button>
-          <button class="msg-opt" onclick="botReply(3)">📍 Ubicación y cómo llegar</button>
-          <button class="msg-opt" onclick="botReply(4)">🙋 Hablar con alguien</button>
-        </div>
+      <div class="bot-body" id="bot-demo-body"></div>
+      <div class="bot-foot">
+        <span class="bot-foot-note">Demo interactiva · no se envía ningún mensaje real</span>
+        <button class="demo-restart" type="button" id="demo-restart">Reiniciar</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- RESEÑAS -->
-<section class="testimonials" id="resenas">
-  <span class="section-label">Reseñas</span>
-  <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-  <p class="section-sub">Pymes reales que automatizan y crecen con Flowi.</p>
-  <div class="reviews-grid">
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Antes respondíamos reservas a mano todo el día. Ahora el bot se encarga solo y nosotros nos enfocamos en la cancha. Fue el mejor cambio que hicimos."</p>
-      <div class="reviewer">
-        <div class="reviewer-avatar">MR</div>
-        <div>
-          <div class="reviewer-name">Martín Rodríguez</div>
-          <div class="reviewer-role">Complejo de Pádel, Palermo</div>
+<!-- PROCESO + SERVICIOS (una sola seccion, dos diapositivas) -->
+<section id="como-funciona" class="tiene-flow" style="background: var(--bg2-t);">
+  <canvas class="flow-bg" data-flow aria-hidden="true"></canvas>
+  <div class="car">
+    <div class="car-track" id="carDual">
+
+      <div class="dual-slide">
+        <span class="section-label">El proceso</span>
+        <h2 class="section-title">Simple, rápido y a medida</h2>
+        <p class="section-sub">Relevamos tu negocio, diseñamos la solución y la dejamos funcionando. Sin tecnicismos.</p>
+        <div class="slide-grid">
+          <div class="step">
+            <div class="step-num">01</div>
+            <h3>Charla inicial</h3>
+            <p>Entendemos tu negocio, cómo lo manejás hoy y dónde perdés tiempo. Sin costo, sin compromiso.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <h3>Relevamiento</h3>
+            <p>Analizamos tus procesos actuales y definimos qué se puede automatizar con mayor impacto.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <h3>Implementación</h3>
+            <p>Configuramos la solución con herramientas no-code. Rápido, probado y sin sorpresas.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">04</div>
+            <h3>Entrega y soporte</h3>
+            <p>Te mostramos cómo funciona todo y quedamos disponibles para ajustes y mejoras continuas.</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"El formulario QR en la entrada del gimnasio nos simplificó la vida. Los datos llegan solos a una hoja y ya. Sencillo y efectivo, justo lo que necesitábamos."</p>
-      <div class="reviewer">
-        <div class="reviewer-avatar">SL</div>
-        <div>
-          <div class="reviewer-name">Sofía Lemos</div>
-          <div class="reviewer-role">Estudio de Pilates, Villa del Parque</div>
+
+      <div class="dual-slide">
+        <span class="section-label">Lo que hacemos</span>
+        <h2 class="section-title">Nuestros servicios</h2>
+        <p class="section-sub">Cuatro formas de sacarte trabajo de encima. Cada una, a la medida de tu negocio.</p>
+        <div class="slide-grid">
+          <div class="service-card featured">
+            <span class="service-tag">Más pedido</span>
+            <div class="service-icon">⚙️</div>
+            <h3>Sistemas a medida</h3>
+            <p>El sistema que tu negocio necesita, diseñado para cómo trabajás vos: turnos, reservas, caja, inventario, clientes y reportes.</p>
+            <ul class="service-features">
+              <li>Relevamiento y diseño previo</li>
+              <li>Panel de administración y vista para tu equipo</li>
+              <li>Capacitación del equipo incluida</li>
+              <li>Opción de suscripción mensual disponible</li>
+            </ul>
+            <a href="#flowigest" style="margin-top:1rem; font-size:0.82rem; color:var(--green-light); text-decoration:none;">¿Tenés una barbería? Conocé FlowiGest →</a>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🤖</div>
+            <h3>Bots de WhatsApp</h3>
+            <p>Atención automática 24/7 con menú de opciones, captura de datos, confirmación de reservas y derivación a humano cuando hace falta.</p>
+            <ul class="service-features">
+              <li>Configuración completa del flujo</li>
+              <li>Menú interactivo personalizado</li>
+              <li>Integración con tu agenda o sistema</li>
+              <li>Pruebas y ajustes incluidos</li>
+            </ul>
+            <a href="#bot-demo" style="margin-top:1rem; font-size:0.82rem; color:var(--green-light); text-decoration:none;">Probalo acá arriba →</a>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🌐</div>
+            <h3>Páginas web</h3>
+            <p>Tu presencia profesional en internet, lista para que te encuentren y te escriban. Diseñada a la medida de tu marca.</p>
+            <ul class="service-features">
+              <li>Diseño propio, no una plantilla</li>
+              <li>Optimizada para mobile y para Google</li>
+              <li>Botón de WhatsApp y formulario de contacto</li>
+              <li>Dominio, hosting y SSL (no incluidos)</li>
+            </ul>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🛒</div>
+            <h3>Tiendas online</h3>
+            <p>Vendé sin depender de contestar mensajes uno por uno: catálogo, carrito y cobro online funcionando solos.</p>
+            <ul class="service-features">
+              <li>Catálogo con stock y variantes</li>
+              <li>Medios de pago y envíos configurados</li>
+              <li>Avisos automáticos de cada pedido</li>
+              <li>Panel para cargar productos vos mismo</li>
+            </ul>
+          </div>
         </div>
+        <p class="slide-nota">
+          También hacemos formularios con QR y encuestas, y mantenimiento mensual de todo lo que implementamos.
+          <a href="#contacto">¿Tenés un proceso específico? Consultanos →</a>
+        </p>
       </div>
+
     </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">"Pensé que era algo complicado y caro. Nada que ver. En dos días ya teníamos el sistema funcionando y los clientes están encantados con poder reservar solos."</p>
-      <div class="reviewer">
-        <div class="reviewer-avatar">GF</div>
-        <div>
-          <div class="reviewer-name">Gustavo Ferreyra</div>
-          <div class="reviewer-role">Fútbol 5, Caballito</div>
-        </div>
-      </div>
-    </div>
+    <button class="car-arrow car-prev" type="button" aria-label="Bloque anterior" data-car="carDual">&#8249;</button>
+    <button class="car-arrow car-next" type="button" aria-label="Bloque siguiente" data-car="carDual">&#8250;</button>
+  </div>
+  <div class="car-dots" id="dotsDual" role="tablist" aria-label="El proceso o Nuestros servicios">
+    <button class="car-dot" type="button" data-ir="0" aria-label="Ver El proceso"></button>
+    <button class="car-dot" type="button" data-ir="1" aria-label="Ver Nuestros servicios"></button>
   </div>
 </section>
 
 <!-- CONTACTO -->
-<section class="contact" id="contacto">
+<section class="contact tiene-flow" id="contacto">
+  <canvas class="flow-bg" data-flow aria-hidden="true"></canvas>
   <span class="section-label">Contacto</span>
   <h2 class="section-title">Hablemos de tu negocio</h2>
   <p class="section-sub" style="margin-bottom:3rem;">Primera consulta sin cargo. Contanos qué necesitás y te armamos una propuesta a medida.</p>
@@ -670,6 +942,7 @@
         <label>Tipo de negocio</label>
         <select id="f-negocio">
           <option value="">Seleccioná una opción</option>
+          <option>Barbería / peluquería</option>
           <option>Complejo deportivo (pádel / fútbol)</option>
           <option>Gimnasio / estudio fitness</option>
           <option>Gastronomía</option>
@@ -681,6 +954,10 @@
         <label>¿Qué proceso querés automatizar?</label>
         <textarea id="f-mensaje" placeholder="Ej: Hola, quisiera saber cuánto cuesta armar una pagina Web para mi negocio..."></textarea>
       </div>
+      <label style="display:flex; align-items:flex-start; gap:8px; font-size:0.78rem; color:var(--text-muted); cursor:pointer;">
+        <input type="checkbox" id="f-privacidad" required style="margin-top:3px; accent-color:var(--green);">
+        <span>Acepto la <a href="privacidad.html" target="_blank" style="color:var(--green-light);">Política de Privacidad</a> para que Flowi use mis datos para responder esta consulta.</span>
+      </label>
       <button type="submit" class="btn-primary" style="align-self:flex-start;">
         Enviar consulta →
       </button>
@@ -717,7 +994,11 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Flowi</div>
-  <p class="footer-copy">© 2026 Flowi · autoflowi.com</p>
+  <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+    <a href="privacidad.html" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Política de Privacidad</a>
+    <a href="terminos.html" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Términos y Condiciones</a>
+    <p class="footer-copy" style="margin:0;">© 2026 Flowi · autoflowi.com</p>
+  </div>
 </footer>
 
 <!-- WHATSAPP FLOTANTE -->
@@ -726,7 +1007,6 @@
   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.782-1.388A9.948 9.948 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm-3.11 5.41c.21 0 .44.003.63.48.22.56.76 1.86.83 2 .07.14.11.3.02.48-.09.18-.14.3-.27.45-.14.16-.29.35-.41.47-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.16-.19.7-.81.88-1.09.19-.28.37-.23.63-.14.25.1 1.61.76 1.89.9.28.14.46.21.53.32.07.12.07.65-.16 1.27-.23.63-1.34 1.2-1.86 1.27-.52.08-1 .14-3.22-.67-2.68-1-4.36-3.69-4.49-3.86-.13-.17-1.07-1.43-1.07-2.73 0-1.3.68-1.94.92-2.2.24-.27.53-.33.7-.33z" fill="#fff"></path></svg>
 </a>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
@@ -739,79 +1019,181 @@ function toggleMenu() {
   }
 }
 
-const botReplies = {
-  1: {
-    user: "🎾 Reservar una cancha",
-    bot: "¡Genial! ¿Para cuándo querés reservar?\n\n📅 Elegí una opción:",
-    opts: ["Hoy", "Mañana", "Otro día"]
+const VERTICALS = {
+  barberia: {
+    chip: '💈 Barbería',
+    avatar: '💈',
+    name: 'Flowi Bot · Barbería Norte',
+    greeting: '¡Hola! 👋 Soy el asistente de Barbería Norte. ¿Qué necesitás?',
+    closing: '¡Listo! Turno reservado ✅ Te mandamos un recordatorio el día anterior.',
+    menu: [
+      {
+        user: '💈 Reservar un turno',
+        bot: '¡Dale! ¿Con quién te querés atender?\n\nDisponibilidad para hoy:',
+        opts: ['Nahuel · 16:30', 'Ezequiel · 17:00', 'El primero que haya']
+      },
+      {
+        user: '💰 Ver precios',
+        bot: 'Nuestros precios:\n✂️ Corte: $12.000\n🧔 Corte + barba: $18.000\n🎨 Color: desde $25.000\n\n¿Querés reservar?',
+        opts: ['Sí, reservar turno', 'Tengo otra consulta']
+      },
+      {
+        user: '📍 Horarios y dirección',
+        bot: 'Abrimos de martes a sábado, de 10 a 20hs.\n\nEstamos en San Martín 1240, Rosario 📍\n\n¿Reservamos un turno?',
+        opts: ['Sí, reservar turno', 'Tengo otra consulta']
+      },
+      {
+        user: '🙋 Hablar con alguien',
+        bot: '¡Claro! Te paso con el equipo ahora mismo. En instantes te responden. 👋',
+        opts: null
+      }
+    ]
   },
-  2: {
-    user: "💰 Ver precios y horarios",
-    bot: "Los precios son:\n🌅 Mañana (8-13hs): $8.000/hora\n☀️ Tarde (13-20hs): $10.000/hora\n🌙 Noche (20-24hs): $12.000/hora\n\n¿Querés reservar?",
-    opts: ["Sí, quiero reservar", "Tengo otra consulta"]
+  padel: {
+    chip: '🎾 Pádel',
+    avatar: '🎾',
+    name: 'Flowi Bot · Complejo El Pádel',
+    greeting: '¡Hola! 👋 Soy el asistente de El Pádel. ¿En qué te puedo ayudar?',
+    closing: '¡Perfecto! Cancha reservada ✅ Te esperamos.',
+    menu: [
+      {
+        user: '🎾 Reservar una cancha',
+        bot: '¡Genial! ¿Para cuándo querés reservar?\n\n📅 Elegí una opción:',
+        opts: ['Hoy', 'Mañana', 'Otro día']
+      },
+      {
+        user: '💰 Ver precios y horarios',
+        bot: 'Los precios son:\n🌅 Mañana (8-13hs): $8.000/hora\n☀️ Tarde (13-20hs): $10.000/hora\n🌙 Noche (20-24hs): $12.000/hora\n\n¿Querés reservar?',
+        opts: ['Sí, quiero reservar', 'Tengo otra consulta']
+      },
+      {
+        user: '📍 Ubicación y cómo llegar',
+        bot: 'Estamos en Av. Corrientes 4500, CABA 📍\n\nPodés llegar en subte (línea B, estación Ángel Gallardo) o colectivos 111, 15 y 99.\n\n¿Querés reservar una cancha?',
+        opts: ['Sí, reservar', 'Tengo otra consulta']
+      },
+      {
+        user: '🙋 Hablar con alguien',
+        bot: '¡Claro! Te paso con nuestro equipo ahora mismo. En instantes alguien te va a atender. 👋',
+        opts: null
+      }
+    ]
   },
-  3: {
-    user: "📍 Ubicación y cómo llegar",
-    bot: "Estamos en Av. Corrientes 4500, CABA 📍\n\nPodés llegar en subte (línea B, estación Ángel Gallardo) o colectivos 111, 15 y 99.\n\n¿Querés reservar una cancha?",
-    opts: ["Sí, reservar", "Tengo otra consulta"]
-  },
-  4: {
-    user: "🙋 Hablar con alguien",
-    bot: "¡Claro! Te paso con nuestro equipo ahora mismo. En instantes alguien te va a atender. 👋",
-    opts: null
+  gimnasio: {
+    chip: '🏋️ Gimnasio',
+    avatar: '🏋️',
+    name: 'Flowi Bot · Estudio Fit',
+    greeting: '¡Hola! 👋 Soy el asistente de Estudio Fit. ¿Qué querés saber?',
+    closing: '¡Genial! Ya te anotamos ✅ Te llega la confirmación por acá.',
+    menu: [
+      {
+        user: '🗓 Anotarme a una clase',
+        bot: '¡Buenísimo! ¿Qué clase te interesa?\n\nCupos disponibles para esta semana:',
+        opts: ['Funcional · 19hs', 'Pilates · 10hs', 'Ver todas']
+      },
+      {
+        user: '💰 Planes y precios',
+        bot: 'Nuestros planes:\n🔹 2 veces por semana: $22.000/mes\n🔹 3 veces por semana: $28.000/mes\n🔹 Libre: $35.000/mes\n\n¿Querés arrancar con una clase de prueba?',
+        opts: ['Sí, clase de prueba', 'Tengo otra consulta']
+      },
+      {
+        user: '📍 Horarios y dirección',
+        bot: 'Abrimos de lunes a viernes de 7 a 22hs y sábados de 9 a 14hs.\n\nEstamos en Mitre 850, Rosario 📍',
+        opts: ['Anotarme a una clase', 'Tengo otra consulta']
+      },
+      {
+        user: '🙋 Hablar con alguien',
+        bot: '¡Claro! Te paso con el equipo. En un rato te responden. 👋',
+        opts: null
+      }
+    ]
   }
 };
 
-function botReply(n) {
-  const body = document.getElementById('bot-demo-body');
-  const r = botReplies[n];
-  
-  // Remove options
-  body.querySelectorAll('.msg-options').forEach(o => o.remove());
-  body.querySelectorAll('.msg-opt').forEach(o => o.disabled = true);
+let currentVertical = 'barberia';
+let botTimers = [];
 
-  // User message
-  const userMsg = document.createElement('div');
-  userMsg.className = 'msg msg-user';
-  userMsg.textContent = r.user;
-  body.appendChild(userMsg);
-
-  // Bot typing
-  setTimeout(() => {
-    const botMsg = document.createElement('div');
-    botMsg.className = 'msg msg-bot';
-    botMsg.style.whiteSpace = 'pre-line';
-    botMsg.textContent = r.bot;
-    body.appendChild(botMsg);
-
-    if (r.opts) {
-      const opts = document.createElement('div');
-      opts.className = 'msg-options';
-      r.opts.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'msg-opt';
-        btn.textContent = opt;
-        btn.onclick = () => {
-          opts.remove();
-          const um2 = document.createElement('div');
-          um2.className = 'msg msg-user';
-          um2.textContent = opt;
-          body.appendChild(um2);
-          setTimeout(() => {
-            const bm2 = document.createElement('div');
-            bm2.className = 'msg msg-bot';
-            bm2.textContent = '¡Perfecto! Te confirmo enseguida. ✅';
-            body.appendChild(bm2);
-          }, 600);
-        };
-        opts.appendChild(btn);
-      });
-      body.appendChild(opts);
-    }
-    body.scrollTop = body.scrollHeight;
-  }, 500);
-  body.scrollTop = body.scrollHeight;
+function botEl(cls, text) {
+  const el = document.createElement('div');
+  el.className = cls;
+  if (text) { el.style.whiteSpace = 'pre-line'; el.textContent = text; }
+  return el;
 }
+
+function scrollChat(body) { body.scrollTop = body.scrollHeight; }
+
+function showTyping(body, ms, done) {
+  const t = botEl('typing');
+  t.innerHTML = '<i></i><i></i><i></i>';
+  body.appendChild(t);
+  scrollChat(body);
+  botTimers.push(setTimeout(() => { t.remove(); done(); scrollChat(body); }, ms));
+}
+
+function renderOptions(body, opts, onPick) {
+  const wrap = botEl('msg-options');
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'msg-opt';
+    btn.type = 'button';
+    btn.textContent = opt;
+    btn.onclick = () => onPick(opt, wrap);
+    wrap.appendChild(btn);
+  });
+  body.appendChild(wrap);
+  scrollChat(body);
+}
+
+function startDemo(key) {
+  currentVertical = key;
+  const v = VERTICALS[key];
+  const body = document.getElementById('bot-demo-body');
+
+  botTimers.forEach(clearTimeout);
+  botTimers = [];
+  body.innerHTML = '';
+  document.getElementById('bot-avatar').textContent = v.avatar;
+  document.getElementById('bot-name').textContent = v.name;
+  document.querySelectorAll('.demo-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.vertical === key);
+  });
+
+  body.appendChild(botEl('msg msg-bot', v.greeting));
+  renderOptions(body, v.menu.map(m => m.user), (picked, wrap) => {
+    wrap.remove();
+    body.appendChild(botEl('msg msg-user', picked));
+    scrollChat(body);
+    const step = v.menu.find(m => m.user === picked);
+    showTyping(body, 700, () => {
+      body.appendChild(botEl('msg msg-bot', step.bot));
+      if (step.opts) {
+        renderOptions(body, step.opts, (pick2, wrap2) => {
+          wrap2.remove();
+          body.appendChild(botEl('msg msg-user', pick2));
+          scrollChat(body);
+          showTyping(body, 700, () => {
+            body.appendChild(botEl('msg msg-bot', v.closing));
+          });
+        });
+      }
+    });
+  });
+}
+
+(function initDemo() {
+  const chips = document.getElementById('demo-chips');
+  if (!chips) return;
+  Object.entries(VERTICALS).forEach(([key, v]) => {
+    const btn = document.createElement('button');
+    btn.className = 'demo-chip';
+    btn.type = 'button';
+    btn.dataset.vertical = key;
+    btn.textContent = v.chip;
+    btn.onclick = () => startDemo(key);
+    chips.appendChild(btn);
+  });
+  document.getElementById('demo-restart').onclick = () => startDemo(currentVertical);
+  startDemo('barberia');
+})();
 
 function submitForm(e) {
   e.preventDefault();
@@ -878,7 +1260,7 @@ if (window.gsap && window.ScrollTrigger) {
   [
     { sel: '.steps', items: '.step' },
     { sel: '.services-grid', items: '.service-card' },
-    { sel: '.reviews-grid', items: '.review-card' }
+    { sel: '.gest-features', items: '.gest-feature' }
   ].forEach(({ sel, items }) => {
     const container = document.querySelector(sel);
     if (!container) return;
@@ -891,136 +1273,561 @@ if (window.gsap && window.ScrollTrigger) {
     });
   });
 
-  const botChat = document.querySelector('.bot-chat');
-  if (botChat && !prefersReducedMotion) {
-    gsap.from(botChat, {
-      opacity: 0, y: 24, duration: 0.5, ease: 'power2.out',
-      scrollTrigger: { trigger: botChat, start: 'top 85%', toggleActions: 'play none none reverse' }
-    });
-  }
+  document.querySelectorAll('.bot-chat, .mock').forEach(panel => {
+    if (!prefersReducedMotion) {
+      gsap.from(panel, {
+        opacity: 0, y: 24, duration: 0.5, ease: 'power2.out',
+        scrollTrigger: { trigger: panel, start: 'top 85%', toggleActions: 'play none none reverse' }
+      });
+    }
+  });
 }
 
-// Hero 3D scene — connected node network (Three.js)
-(function initHero3D() {
-  const container = document.getElementById('hero3d');
-  if (!container || !window.THREE || prefersReducedMotion) return;
+// El link "Servicios" del menu lleva a la seccion y ademas deja el
+// carrusel parado en la diapositiva de servicios.
+(function linkAServicios() {
+  document.querySelectorAll('[data-ver-servicios]').forEach((a) => {
+    a.addEventListener('click', () => {
+      const pista = document.getElementById('carDual');
+      if (!pista || pista.children.length < 2) return;
+      const paso = pista.children[1].offsetLeft - pista.children[0].offsetLeft;
+      setTimeout(() => pista.scrollTo({ left: paso }), 420);
+    });
+  });
+})();
 
-  const width = container.clientWidth || window.innerWidth;
-  const height = container.clientHeight || window.innerHeight;
+// Bolillero del hero. Sortea de verdad: cada resultado tiene su peso y
+// todos son cosas que podemos cumplir. La reunion con prototipo es la
+// que sale poco; "tira de nuevo" no consume nada y mantiene el juego.
+(function initBolillero() {
+  const caja = document.getElementById('bolillero');
+  const maquina = document.getElementById('bolMaquina');
+  const tambor = document.getElementById('bolTambor');
+  const capaBolas = document.getElementById('bolBolas');
+  const salida = document.getElementById('bolSalida');
+  const salidaNum = document.getElementById('bolSalidaNum');
+  const boton = document.getElementById('bolBoton');
+  const bajada = document.getElementById('bolBajada');
+  const resultado = document.getElementById('bolResultado');
+  const elPremio = document.getElementById('bolPremio');
+  const elDetalle = document.getElementById('bolDetalle');
+  const elWsp = document.getElementById('bolWsp');
+  const elOtra = document.getElementById('bolOtra');
+  const elReset = document.getElementById('bolReset');
+  if (!caja || !tambor || !boton) return;
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 100);
-  camera.position.set(0, 0, 14);
+  const WSP = 'https://wa.me/543413487910?text=';
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouchDevice ? 1.5 : 2));
-  renderer.setSize(width, height);
-  container.appendChild(renderer.domElement);
+  // ---- Lo unico que hay que tocar para cambiar el juego -------------
+  // "peso" es la probabilidad relativa de cada resultado y "bolas" son
+  // los numeros que le corresponden, para que el numero que sale de la
+  // maquina se condiga siempre con lo que le toco.
+  const PREMIOS = [
+    { id: 'reunion', peso: 4, bolas: [7],
+      titulo: 'Primera reuni\u00f3n sin cargo + prototipo',
+      detalle: 'Nos cont\u00e1s qu\u00e9 necesit\u00e1s y te armamos un prototipo de tu sistema o tu web, para que lo veas funcionando antes de decidir nada.',
+      wsp: 'Hola Flowi, gir\u00e9 el bolillero en la web y me sali\u00f3 la primera reuni\u00f3n sin cargo con prototipo.' },
+    { id: 'diagnostico', peso: 22, bolas: [1, 4, 9],
+      titulo: 'Diagn\u00f3stico expr\u00e9s de tu negocio',
+      detalle: 'Contanos c\u00f3mo trabaj\u00e1s hoy y te decimos por d\u00f3nde conviene arrancar a automatizar. Sin vueltas y sin compromiso.',
+      wsp: 'Hola Flowi, gir\u00e9 el bolillero en la web y me sali\u00f3 el diagn\u00f3stico expr\u00e9s. Te cuento c\u00f3mo trabajo hoy.' },
+    { id: 'demo', peso: 22, bolas: [2, 6, 11],
+      titulo: 'Demo guiada de FlowiGest',
+      detalle: 'Te mostramos el sistema andando, con datos de prueba, y te respondemos todo lo que quieras preguntar.',
+      wsp: 'Hola Flowi, gir\u00e9 el bolillero en la web y me sali\u00f3 la demo guiada de FlowiGest.' },
+    { id: 'prioridad', peso: 18, bolas: [3, 8],
+      titulo: 'Turno prioritario',
+      detalle: 'Te agendamos esta semana: pas\u00e1s adelante en la fila de arranques.',
+      wsp: 'Hola Flowi, gir\u00e9 el bolillero en la web y me sali\u00f3 el turno prioritario. Quiero agendar esta semana.' },
+    { id: 'otra', peso: 34, bolas: [5, 10, 12],
+      titulo: '\u00a1Tir\u00e1 de nuevo!', detalle: '', wsp: null }
+  ];
+  const FRASES_OTRA = [
+    'Esta no cuenta. Dale otra vez al bolillero.',
+    'Bolilla libre: te queda otro tiro.',
+    'Uy, casi. Volv\u00e9 a girar, va de nuevo.',
+    'Te ganaste un tiro m\u00e1s. Gir\u00e1 otra vez.'
+  ];
+  // -------------------------------------------------------------------
 
-  const GREEN = new THREE.Color(0x1D9E75);
-  const GREEN_LIGHT = new THREE.Color(0x9FE1CB);
+  const OTRA = PREMIOS[PREMIOS.length - 1];
+  const TOTAL = PREMIOS.reduce((a, p) => a + p.peso, 0);
 
-  // Nodes
-  const NODE_COUNT = isTouchDevice ? 24 : 42;
-  const nodes = [];
-  const spread = { x: 11, y: 7, z: 6 };
-  for (let i = 0; i < NODE_COUNT; i++) {
-    nodes.push({
-      pos: new THREE.Vector3(
-        (Math.random() - 0.5) * spread.x * 2,
-        (Math.random() - 0.5) * spread.y * 2,
-        (Math.random() - 0.5) * spread.z * 2
-      ),
-      vel: new THREE.Vector3(
-        (Math.random() - 0.5) * 0.006,
-        (Math.random() - 0.5) * 0.006,
-        (Math.random() - 0.5) * 0.006
-      )
+  const COLORES = [
+    ['#cfe9de', '#4fb894', '#14795a'],
+    ['#ffe6bd', '#efb04a', '#a06a0e'],
+    ['#cfe6ff', '#58a9e8', '#15568f'],
+    ['#ffd6e4', '#e8709a', '#992049'],
+    ['#e2d6ff', '#9a7ae8', '#4d2a99'],
+    ['#d2f7ee', '#3fd0ab', '#0e8a6b']
+  ];
+  const pintura = (c) => 'radial-gradient(circle at 32% 26%, #ffffff 0%, ' +
+    c[0] + ' 26%, ' + c[1] + ' 62%, ' + c[2] + ' 100%)';
+
+  const CANT = 12, R = 89, RB = 13.5, TECHO = 66;
+  const bolas = [];
+  let girando = false, puedeTirar = true;
+
+  for (let n = 1; n <= CANT; n++) {
+    const c = COLORES[(n - 1) % COLORES.length];
+    const el = document.createElement('div');
+    el.className = 'bol-bola';
+    el.style.background = pintura(c);
+    el.innerHTML = '<i>' + n + '</i>';
+    const ang = (Math.PI * 2 * n) / CANT + Math.random() * 0.35;
+    const rad = 22 + Math.random() * 36;
+    el.style.left = (R - RB + Math.cos(ang) * rad) + 'px';
+    el.style.top = (R - RB + Math.sin(ang) * rad) + 'px';
+    capaBolas.appendChild(el);
+    bolas.push({ el: el, n: n, col: c, ang: ang, rad: rad });
+  }
+
+  const sinGsap = !window.gsap;
+  const INVITE = isTouchDevice
+    ? 'Toc\u00e1 el tambor para mezclar las bolillas y dale a girar.'
+    : 'Pas\u00e1 el mouse por el tambor para mezclar las bolillas y dale a girar.';
+  bajada.textContent = INVITE;
+
+  // ---- Mezclar con el puntero: las bolillas se corren de la mano
+  function mezclar(ev) {
+    if (girando) return;
+    const r = capaBolas.getBoundingClientRect();
+    const px = ev.clientX - r.left, py = ev.clientY - r.top;
+    bolas.forEach((b) => {
+      const bx = R + Math.cos(b.ang) * b.rad, by = R + Math.sin(b.ang) * b.rad;
+      const dx = bx - px, dy = by - py;
+      const d = Math.hypot(dx, dy) || 1;
+      if (d > 78) return;
+      const f = ((78 - d) / 78) * 30;
+      let nx = (dx / d) * f, ny = (dy / d) * f;
+      // que no se escapen del tambor
+      const fuera = Math.hypot(bx + nx - R, by + ny - R);
+      if (fuera > TECHO) {
+        const k = TECHO / fuera;
+        nx = (bx + nx - R) * k + R - bx;
+        ny = (by + ny - R) * k + R - by;
+      }
+      gsap.to(b.el, { x: nx, y: ny, duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+    });
+  }
+  function acomodar() {
+    if (girando) return;
+    bolas.forEach((b) => gsap.to(b.el, { x: 0, y: 0, duration: 1.1, ease: 'elastic.out(1, 0.55)', overwrite: 'auto' }));
+  }
+
+  if (!prefersReducedMotion && !sinGsap) {
+    let pendiente = false;
+    maquina.addEventListener('pointermove', (ev) => {
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(() => { pendiente = false; mezclar(ev); });
+    }, { passive: true });
+    maquina.addEventListener('pointerleave', acomodar);
+  }
+
+  // ---- El sorteo
+  function sortear() {
+    let r = Math.random() * TOTAL;
+    for (let i = 0; i < PREMIOS.length; i++) {
+      r -= PREMIOS[i].peso;
+      if (r < 0) return PREMIOS[i];
+    }
+    return OTRA;
+  }
+
+  const CLAVE = 'flowi_bolillero_v2';
+  const guardar = (id, n) => { try { localStorage.setItem(CLAVE, id + '|' + n); } catch (e) {} };
+
+  function mostrar(premio, numero) {
+    const esOtra = premio.id === 'otra';
+    elPremio.textContent = premio.titulo;
+    elDetalle.textContent = esOtra
+      ? FRASES_OTRA[Math.floor(Math.random() * FRASES_OTRA.length)]
+      : premio.detalle;
+    elWsp.style.display = esOtra ? 'none' : 'block';
+    elOtra.style.display = esOtra ? 'block' : 'none';
+    elReset.style.display = esOtra ? 'none' : 'block';
+    if (!esOtra) {
+      elWsp.href = WSP + encodeURIComponent(premio.wsp);
+      guardar(premio.id, numero);
+    }
+    resultado.classList.add('is-visible');
+    boton.style.display = 'none';
+    puedeTirar = false;
+  }
+
+  function limpiarMaquina() {
+    if (sinGsap) {
+      bolas.forEach((b) => { b.el.style.opacity = 1; b.el.style.transform = ''; });
+      salida.style.opacity = 0;
+    } else {
+      gsap.set(bolas.map((b) => b.el), { opacity: 1, x: 0, y: 0 });
+      gsap.set(salida, { opacity: 0, top: 176, scale: 1 });
+    }
+    resultado.classList.remove('is-visible');
+    boton.style.display = 'block';
+    puedeTirar = true;
+  }
+
+  function tirar() {
+    if (girando || !puedeTirar) return;
+    const premio = sortear();
+    const numero = premio.bolas[Math.floor(Math.random() * premio.bolas.length)];
+    const bola = bolas.filter((b) => b.n === numero)[0] || bolas[0];
+
+    salidaNum.textContent = numero;
+    salida.style.background = pintura(bola.col);
+
+    if (prefersReducedMotion || sinGsap) {
+      salida.style.opacity = 1;
+      mostrar(premio, numero);
+      return;
+    }
+
+    girando = true;
+    puedeTirar = false;
+    boton.disabled = true;
+    boton.textContent = 'Girando...';
+
+    const tl = gsap.timeline({ onComplete: () => { girando = false; } });
+    tl.to(tambor, { rotation: '+=' + (360 * 4 + Math.floor(Math.random() * 360)), duration: 2.4, ease: 'power2.out' }, 0);
+
+    // Las bolillas revolean adentro del tambor
+    bolas.forEach((b) => {
+      const p = { a: b.ang, r: b.rad };
+      const bx = Math.cos(b.ang) * b.rad, by = Math.sin(b.ang) * b.rad;
+      tl.to(p, {
+        a: b.ang + Math.PI * (7 + Math.random() * 7),
+        r: 20 + Math.random() * 38,
+        duration: 2.4, ease: 'power2.out',
+        onUpdate: () => gsap.set(b.el, {
+          x: Math.cos(p.a) * p.r - bx,
+          y: Math.sin(p.a) * p.r - by
+        })
+      }, 0);
+    });
+
+    // La que toca se va del tambor, baja por el tubo y rebota en la bandeja
+    tl.to(bola.el, { opacity: 0, duration: 0.2 }, 1.95);
+    tl.set(salida, { opacity: 1, top: 176, scale: 0.92 }, 2.0);
+    tl.to(salida, { top: 214, duration: 0.5, ease: 'power1.in' }, 2.0);
+    tl.to(salida, { scale: 1, duration: 0.2, ease: 'back.out(3)' }, 2.5);
+    tl.to(salida, { top: 202, duration: 0.18, ease: 'power1.out' }, 2.62);
+    tl.to(salida, { top: 214, duration: 0.26, ease: 'bounce.out' }, 2.8);
+
+    tl.call(() => {
+      boton.disabled = false;
+      boton.textContent = 'Girar';
+      mostrar(premio, numero);
+    }, null, 3.1);
+    tl.fromTo(resultado, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 3.1);
+  }
+
+  boton.addEventListener('click', tirar);
+  maquina.addEventListener('click', () => { if (puedeTirar) tirar(); });
+  elOtra.addEventListener('click', () => { limpiarMaquina(); tirar(); });
+  elReset.addEventListener('click', () => {
+    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    bajada.textContent = INVITE;
+    limpiarMaquina();
+  });
+
+  // Si ya jugo, le devolvemos lo que le habia tocado en vez de hacerlo
+  // girar de nuevo por su cuenta.
+  const guardado = (function () { try { return localStorage.getItem(CLAVE); } catch (e) { return null; } })();
+  if (guardado) {
+    const partes = guardado.split('|');
+    const previo = PREMIOS.filter((p) => p.id === partes[0])[0];
+    if (previo && previo.id !== 'otra') {
+      const b = bolas.filter((x) => x.n === Number(partes[1]))[0] || bolas[0];
+      salidaNum.textContent = partes[1];
+      salida.style.background = pintura(b.col);
+      if (sinGsap) {
+        salida.style.opacity = 1; salida.style.top = '214px'; b.el.style.opacity = 0;
+      } else {
+        gsap.set(salida, { opacity: 1, top: 214 });
+        gsap.set(b.el, { opacity: 0 });
+      }
+      bajada.textContent = 'Ya giraste. Esto es lo que te llev\u00e1s.';
+      mostrar(previo, partes[1]);
+    }
+  }
+})();
+
+// Carruseles horizontales: flechas + avance automatico
+(function initCarruseles() {
+  const PAUSA_MS = 5000;        // cada cuanto avanza solo
+  const ESPERA_TRAS_TOCAR = 9000; // si el visitante lo mueve, lo dejamos tranquilo un rato
+
+  document.querySelectorAll('.car-track').forEach((pista) => {
+    const items = [...pista.children];
+    if (items.length < 2) return;
+    const caja = pista.closest('.car');
+    const prev = caja.querySelector('.car-prev');
+    const next = caja.querySelector('.car-next');
+
+    // Cuanto hay que correr para pasar una tarjeta (ancho + separacion)
+    const paso = () => {
+      if (items.length < 2) return pista.clientWidth;
+      return items[1].offsetLeft - items[0].offsetLeft;
+    };
+    const maxScroll = () => pista.scrollWidth - pista.clientWidth;
+
+    // Se reasigna abajo si la seccion tiene puntitos.
+    let marcar = () => {};
+
+    function mover(dir) {
+      const objetivo = pista.scrollLeft + dir * paso();
+      // Al llegar a una punta, vuelve a la otra: el recorrido no se corta.
+      if (dir > 0 && pista.scrollLeft >= maxScroll() - 2) pista.scrollTo({ left: 0 });
+      else if (dir < 0 && pista.scrollLeft <= 2) pista.scrollTo({ left: maxScroll() });
+      else pista.scrollTo({ left: objetivo });
+      // No esperamos el evento 'scroll': si tarda, los puntitos quedan mintiendo.
+      marcar();
+    }
+
+    let reloj = null;
+    const arrancar = () => {
+      if (reloj || prefersReducedMotion) return;
+      reloj = setInterval(() => mover(1), PAUSA_MS);
+    };
+    const parar = () => { clearInterval(reloj); reloj = null; };
+    const pausarUnRato = () => {
+      parar();
+      clearTimeout(pista._reanudar);
+      pista._reanudar = setTimeout(arrancar, ESPERA_TRAS_TOCAR);
+    };
+
+    if (prev) prev.addEventListener('click', () => { mover(-1); pausarUnRato(); });
+    if (next) next.addEventListener('click', () => { mover(1); pausarUnRato(); });
+
+    // Puntitos: marcan en cual de los dos bloques estas y permiten saltar.
+    const dots = [...(caja.parentElement.querySelectorAll('.car-dot') || [])];
+    if (dots.length) {
+      marcar = () => {
+        const i = Math.round(pista.scrollLeft / paso());
+        dots.forEach((d, n) => d.classList.toggle('is-active', n === i));
+      };
+      dots.forEach((d) => d.addEventListener('click', () => {
+        pista.scrollTo({ left: Number(d.dataset.ir) * paso() });
+        marcar();
+        pausarUnRato();
+      }));
+      pista.addEventListener('scroll', marcar, { passive: true });
+      marcar();
+    }
+
+    // Mientras el mouse esta encima no le cambiamos la tarjeta al visitante.
+    // Ojo: no alcanza con pointerenter/pointerleave. Si el puntero queda
+    // quieto sobre el carrusel y el leave no llega nunca (pasa al scrollear
+    // sin mover el mouse), se queda pausado para siempre. Por eso cada
+    // movimiento del puntero vuelve a preguntar donde esta parado.
+    caja.addEventListener('pointerenter', parar);
+    caja.addEventListener('pointerleave', arrancar);
+    document.addEventListener('pointermove', (e) => {
+      if (caja.contains(e.target)) parar();
+      else arrancar();
+    }, { passive: true });
+    pista.addEventListener('touchstart', pausarUnRato, { passive: true });
+
+    // Solo corre mientras se ve, para no gastar al vicio.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((e) => (e.isIntersecting ? arrancar() : parar()));
+      }, { threshold: 0.3 }).observe(caja);
+    } else {
+      arrancar();
+    }
+
+  });
+})();
+
+// FlowiGest: la escena con el sistema se reproduce sola, no la maneja el scroll
+(function initGestVideo() {
+  const video = document.getElementById('gestEscena');
+  if (!video) return;
+
+  // Con movimiento reducido queda el poster y listo.
+  if (prefersReducedMotion) return;
+
+  // El atributo del HTML es preload="none" para no pesar en la primera carga;
+  // una vez que sabemos que lo vamos a reproducir, lo pedimos de verdad. Con
+  // "none" el navegador puede no traer nada y quedarse en el poster.
+  video.preload = 'auto';
+  video.src = 'media/escena-sistema.mp4';
+  video.load();
+
+  const reproducir = () => video.play().catch(() => {});
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => (e.isIntersecting ? reproducir() : video.pause()));
+    }, { threshold: 0.25 }).observe(video);
+  } else {
+    reproducir();
+  }
+
+  // Si la politica de autoplay lo bloqueo, el primer gesto lo destraba.
+  ['scroll', 'pointerdown', 'keydown'].forEach((ev) =>
+    window.addEventListener(ev, reproducir, { once: true, passive: true }));
+
+  // El navegador pausa el video en una pestana oculta y al volver el
+  // observer no lo reanuda porque la interseccion no cambio.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    const r = video.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight) reproducir();
+  });
+})();
+
+// Fondo de rutas de proceso con pulsos viajando por ellas. Se monta en
+// cada <canvas data-flow>: el hero y las secciones de mas abajo.
+// Reemplazo al video de 668 KB, que ademas quedaba tapado por el contenido.
+(function initFondosFlow() {
+  document.querySelectorAll('canvas[data-flow]').forEach(montar);
+
+function montar(cv) {
+  if (!cv.getContext) return;
+  const ctx = cv.getContext('2d');
+  const seccion = cv.closest('section') || cv;
+
+  const VERDE = '29,158,117';
+  const CLARO = '159,225,203';
+  let rutas = [], ancho = 0, alto = 0, raf = 0, ultimo = 0, visible = true;
+
+  // Cada ruta es una polilinea en angulo recto, como un diagrama de proceso.
+  function armar() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    ancho = cv.clientWidth; alto = cv.clientHeight;
+    if (!ancho || !alto) return false;
+    cv.width = Math.round(ancho * dpr);
+    cv.height = Math.round(alto * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const cantidad = ancho < 700 ? 6 : Math.max(6, Math.min(12, Math.round(alto / 90)));
+    rutas = [];
+    for (let i = 0; i < cantidad; i++) {
+      const pts = [];
+      let x = -60;
+      let y = Math.round((alto * (i + 0.5)) / cantidad + (Math.random() - 0.5) * 50);
+      pts.push({ x: x, y: y });
+      const tramos = 2 + Math.floor(Math.random() * 3);
+      for (let t = 0; t < tramos; t++) {
+        x += 110 + Math.random() * (ancho / cantidad + 200);
+        pts.push({ x: x, y: y });
+        y += (Math.random() < 0.5 ? -1 : 1) * (45 + Math.random() * 130);
+        y = Math.max(24, Math.min(alto - 24, y));
+        pts.push({ x: x, y: y });
+      }
+      pts.push({ x: ancho + 80, y: y });
+
+      // Distancia acumulada, para ubicar el pulso sobre la ruta
+      const acum = [0];
+      for (let k = 1; k < pts.length; k++) {
+        acum.push(acum[k - 1] + Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y));
+      }
+      rutas.push({
+        pts: pts, acum: acum, largo: acum[acum.length - 1],
+        pos: Math.random() * acum[acum.length - 1],
+        vel: 55 + Math.random() * 85
+      });
+    }
+    return true;
+  }
+
+  function puntoEn(r, d) {
+    if (d < 0) d += r.largo;
+    d = d % r.largo;
+    for (let k = 1; k < r.acum.length; k++) {
+      if (d <= r.acum[k]) {
+        const t = (d - r.acum[k - 1]) / (r.acum[k] - r.acum[k - 1] || 1);
+        return {
+          x: r.pts[k - 1].x + (r.pts[k].x - r.pts[k - 1].x) * t,
+          y: r.pts[k - 1].y + (r.pts[k].y - r.pts[k - 1].y) * t
+        };
+      }
+    }
+    return r.pts[r.pts.length - 1];
+  }
+
+  function dibujar() {
+    ctx.clearRect(0, 0, ancho, alto);
+
+    rutas.forEach((r) => {
+      // La ruta, apenas marcada
+      ctx.beginPath();
+      ctx.moveTo(r.pts[0].x, r.pts[0].y);
+      for (let k = 1; k < r.pts.length; k++) ctx.lineTo(r.pts[k].x, r.pts[k].y);
+      ctx.strokeStyle = 'rgba(' + VERDE + ',0.20)';
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+
+      // Los nodos de cada recodo: se encienden cuando pasa el pulso
+      for (let k = 1; k < r.pts.length - 1; k++) {
+        const bruto = ((r.acum[k] - r.pos) % r.largo + r.largo) % r.largo;
+        const cerca = Math.min(bruto, r.largo - bruto);
+        const brillo = cerca < 46 ? 1 - cerca / 46 : 0;
+        ctx.beginPath();
+        ctx.arc(r.pts[k].x, r.pts[k].y, 1.8 + brillo * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + (brillo > 0.35 ? CLARO : VERDE) + ',' + (0.28 + brillo * 0.62) + ')';
+        ctx.fill();
+      }
+
+      // El pulso: una cabeza clara y una cola que se apaga
+      for (let c = 0; c < 7; c++) {
+        const p = puntoEn(r, r.pos - c * 7);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, c === 0 ? 2.6 : 2.1 - c * 0.18, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + (c < 2 ? CLARO : VERDE) + ',' + ((1 - c / 7) * 0.85) + ')';
+        ctx.fill();
+      }
     });
   }
 
-  const pointsGeo = new THREE.BufferGeometry();
-  const pointsPos = new Float32Array(NODE_COUNT * 3);
-  pointsGeo.setAttribute('position', new THREE.BufferAttribute(pointsPos, 3));
-  const pointsMat = new THREE.PointsMaterial({ color: GREEN_LIGHT, size: 0.12, transparent: true, opacity: 0.9 });
-  const pointCloud = new THREE.Points(pointsGeo, pointsMat);
-  scene.add(pointCloud);
-
-  const MAX_LINKS = NODE_COUNT * 6;
-  const lineGeo = new THREE.BufferGeometry();
-  const linePos = new Float32Array(MAX_LINKS * 2 * 3);
-  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
-  const lineMat = new THREE.LineBasicMaterial({ color: GREEN, transparent: true, opacity: 0.18 });
-  const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
-  scene.add(lineSegments);
-
-  const group = new THREE.Group();
-  group.add(pointCloud);
-  group.add(lineSegments);
-  scene.add(group);
-
-  const LINK_DIST = 4.2;
-  let mouseX = 0, mouseY = 0;
-  container.addEventListener('mousemove', (e) => {
-    const rect = container.getBoundingClientRect();
-    mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-  });
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    for (let i = 0; i < NODE_COUNT; i++) {
-      const n = nodes[i];
-      n.pos.add(n.vel);
-      ['x', 'y', 'z'].forEach(axis => {
-        const limit = spread[axis];
-        if (n.pos[axis] > limit || n.pos[axis] < -limit) n.vel[axis] *= -1;
-      });
-      pointsPos[i * 3] = n.pos.x;
-      pointsPos[i * 3 + 1] = n.pos.y;
-      pointsPos[i * 3 + 2] = n.pos.z;
-    }
-    pointsGeo.attributes.position.needsUpdate = true;
-
-    let linkIdx = 0;
-    for (let i = 0; i < NODE_COUNT && linkIdx < MAX_LINKS; i++) {
-      for (let j = i + 1; j < NODE_COUNT && linkIdx < MAX_LINKS; j++) {
-        if (nodes[i].pos.distanceTo(nodes[j].pos) < LINK_DIST) {
-          linePos[linkIdx * 6] = nodes[i].pos.x;
-          linePos[linkIdx * 6 + 1] = nodes[i].pos.y;
-          linePos[linkIdx * 6 + 2] = nodes[i].pos.z;
-          linePos[linkIdx * 6 + 3] = nodes[j].pos.x;
-          linePos[linkIdx * 6 + 4] = nodes[j].pos.y;
-          linePos[linkIdx * 6 + 5] = nodes[j].pos.z;
-          linkIdx++;
-        }
-      }
-    }
-    lineGeo.setDrawRange(0, linkIdx * 2);
-    lineGeo.attributes.position.needsUpdate = true;
-
-    group.rotation.y += (mouseX * 0.25 - group.rotation.y) * 0.02;
-    group.rotation.x += (-mouseY * 0.15 - group.rotation.x) * 0.02;
-    group.rotation.y += 0.0006;
-
-    renderer.setRenderTarget(null);
-    renderer.render(scene, camera);
+  function cuadro(t) {
+    const dt = ultimo ? Math.min((t - ultimo) / 1000, 0.05) : 0;
+    ultimo = t;
+    rutas.forEach((r) => { r.pos = (r.pos + r.vel * dt) % r.largo; });
+    dibujar();
+    raf = requestAnimationFrame(cuadro);
   }
-  animate();
 
-  function syncSize() {
-    const w = container.clientWidth || window.innerWidth;
-    const h = container.clientHeight || window.innerHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-    renderer.render(scene, camera);
+  function arrancar() {
+    if (raf || !visible || document.hidden) return;
+    ultimo = 0;
+    raf = requestAnimationFrame(cuadro);
   }
-  window.addEventListener('resize', syncSize);
-  window.addEventListener('load', syncSize);
+  function parar() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
 
-  setTimeout(() => container.classList.add('is-ready'), 50);
+  function seguir() {
+    cv.classList.add('is-ready');
+    if (prefersReducedMotion) { dibujar(); return; }
+
+    // Solo se anima mientras el hero esta a la vista
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((e) => { visible = e.isIntersecting; visible ? arrancar() : parar(); });
+      }, { threshold: 0 }).observe(seccion);
+    }
+    document.addEventListener('visibilitychange', () => (document.hidden ? parar() : arrancar()));
+
+    let tmp;
+    window.addEventListener('resize', () => {
+      clearTimeout(tmp);
+      tmp = setTimeout(() => { parar(); if (armar()) arrancar(); }, 200);
+    }, { passive: true });
+
+    arrancar();
+  }
+
+  // En la primera carga la seccion puede no tener alto todavia (fuentes,
+  // layout). Reintentamos hasta que el navegador lo resuelva.
+  let intentos = 0;
+  (function esperarLayout() {
+    if (armar()) { seguir(); return; }
+    if (intentos++ < 40) requestAnimationFrame(esperarLayout);
+  })();
+}
 })();
 </script>
 </body>
