@@ -1,22 +1,41 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flowi — Automatización a medida para pymes</title>
-<meta name="description" content="Automatizamos los procesos que te roban tiempo: bots de WhatsApp, sistemas de gestión a medida (incluido FlowiGest para barberías), formularios con QR y landing pages. Sin programar, con resultados desde el día uno.">
+<meta name="description" content="Bots de WhatsApp, sistemas de gestión a medida, tiendas online y páginas web para pymes. Incluye FlowiGest, nuestro sistema para barberías. Sin programar.">
 <link rel="canonical" href="https://autoflowi.com/">
 <meta name="theme-color" content="#0A0F0D">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0F0D'/%3E%3Ccircle cx='32' cy='32' r='16' fill='none' stroke='%231D9E75' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%231D9E75'/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Flowi">
 <meta property="og:title" content="Flowi — Automatización a medida para pymes">
-<meta property="og:description" content="Bots de WhatsApp, sistemas de gestión a medida (FlowiGest para barberías), formularios con QR y landing pages. Sin programar, con resultados desde el día uno.">
+<meta property="og:description" content="Bots de WhatsApp, sistemas a medida, tiendas online y páginas web para pymes. Probá FlowiGest, nuestro sistema para barberías.">
 <meta property="og:url" content="https://autoflowi.com/">
-<meta name="twitter:card" content="summary">
+<meta property="og:locale" content="es_AR">
+<meta property="og:image" content="https://autoflowi.com/media/og-flowi.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Flowi — Hecho a tu medida. No al revés.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://autoflowi.com/media/og-flowi.jpg">
 <meta name="twitter:title" content="Flowi — Automatización a medida para pymes">
 <meta name="twitter:description" content="Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Flowi",
+  "url": "https://autoflowi.com/",
+  "image": "https://autoflowi.com/media/og-flowi.jpg",
+  "description": "Automatización de procesos para pymes: bots de WhatsApp, sistemas de gestión a medida, tiendas online y páginas web.",
+  "areaServed": { "@type": "Country", "name": "Argentina" },
+  "telephone": "+5493413487910",
+  "email": "brunoballinari@gmail.com",
+  "sameAs": ["https://www.instagram.com/flowi.estudio"]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
@@ -65,6 +84,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 1.1rem 5%;
     background: rgba(10,15,13,0.85);
+    -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
   }
@@ -100,6 +120,7 @@
     background-image: linear-gradient(var(--border) 1px, transparent 1px),
                       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 60px 60px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
     mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
     will-change: transform;
   }
@@ -144,6 +165,7 @@
     position: relative; z-index: 1;
     width: 340px; max-width: 100%;
     background: rgba(10,15,13,0.74);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-strong);
     border-radius: 20px;
@@ -350,7 +372,7 @@
   .car-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     z-index: 5; width: 42px; height: 42px; border-radius: 50%;
-    background: rgba(10,15,13,0.85); backdrop-filter: blur(8px);
+    background: rgba(10,15,13,0.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     border: 1px solid var(--border-strong); color: var(--text);
     font-size: 1.3rem; line-height: 1; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -956,7 +978,7 @@
       </div>
       <label style="display:flex; align-items:flex-start; gap:8px; font-size:0.78rem; color:var(--text-muted); cursor:pointer;">
         <input type="checkbox" id="f-privacidad" required style="margin-top:3px; accent-color:var(--green);">
-        <span>Acepto la <a href="privacidad.html" target="_blank" style="color:var(--green-light);">Política de Privacidad</a> para que Flowi use mis datos para responder esta consulta.</span>
+        <span>Acepto la <a href="privacidad" target="_blank" style="color:var(--green-light);">Política de Privacidad</a> para que Flowi use mis datos para responder esta consulta.</span>
       </label>
       <button type="submit" class="btn-primary" style="align-self:flex-start;">
         Enviar consulta →
@@ -995,8 +1017,8 @@
 <footer>
   <div class="footer-logo">Flowi</div>
   <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
-    <a href="privacidad.html" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Política de Privacidad</a>
-    <a href="terminos.html" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Términos y Condiciones</a>
+    <a href="privacidad" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Política de Privacidad</a>
+    <a href="terminos" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Términos y Condiciones</a>
     <p class="footer-copy" style="margin:0;">© 2026 Flowi · autoflowi.com</p>
   </div>
 </footer>
@@ -1210,12 +1232,15 @@ function submitForm(e) {
     '💬 *Consulta:* ' + mensaje
   );
   
-  document.getElementById('form-success').style.display = 'block';
+  const wa = 'https://wa.me/543413487910?text=' + texto;
+
+  // Se abre aca adentro del click: si lo demoramos, el navegador lo bloquea.
+  const tab = window.open(wa, '_blank');
+  try { sessionStorage.setItem('flowi_wa', wa); } catch (err) {}
+
   e.target.reset();
-  
-  setTimeout(function() {
-    window.open('https://wa.me/543413487910?text=' + texto, '_blank');
-  }, 500);
+  // La pagina de gracias es la que nos deja contar cuantos consultaron.
+  window.location.href = 'gracias' + (tab ? '' : '?wa=1');
 }
 
 // Scroll progress bar

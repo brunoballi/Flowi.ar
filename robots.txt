@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# La pagina de gracias es el final de un formulario, no una entrada al sitio.
+Disallow: /gracias
+
+Sitemap: https://autoflowi.com/sitemap.xml
