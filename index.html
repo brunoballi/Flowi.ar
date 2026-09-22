@@ -44,6 +44,10 @@
 
   :root {
     --green: #1D9E75;
+    /* Mismo verde, 6% mas oscuro: el de marca sobre blanco da 3.39:1 y
+       el minimo accesible para texto normal es 4.5:1. Este da 4.65:1.
+       Va solo donde hay texto blanco encima. */
+    --green-btn: #188462;
     --green-dark: #085041;
     --green-light: #9FE1CB;
     --green-pale: #E1F5EE;
@@ -93,7 +97,8 @@
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
   .nav-links a:hover { color: var(--text); }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer;
+    background: none; border: none; padding: 4px; }
   .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
 
   /* HERO */
@@ -245,7 +250,7 @@
   }
 
   .bol-boton {
-    width: 100%; background: var(--green); color: #fff;
+    width: 100%; background: var(--green-btn); color: #fff;
     border: none; border-radius: 50px; padding: 0.8rem 1rem;
     font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
     cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
@@ -294,7 +299,7 @@
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--green); color: #fff;
+    background: var(--green-btn); color: #fff;
     padding: 0.85rem 1.8rem; border-radius: 50px;
     font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
     text-decoration: none; border: none; cursor: pointer;
@@ -492,7 +497,7 @@
     transition: background 0.2s, border-color 0.2s, color 0.2s;
   }
   .demo-chip:hover { border-color: var(--border-strong); color: var(--text); }
-  .demo-chip.active { background: var(--green); border-color: var(--green); color: #fff; }
+  .demo-chip.active { background: var(--green-btn); border-color: var(--green-btn); color: #fff; }
   .typing {
     display: flex; gap: 4px; align-items: center; align-self: flex-start;
     background: var(--bg3); padding: 0.8rem 1rem;
@@ -578,11 +583,26 @@
     background: var(--bg); border: 1px solid var(--border);
     color: var(--text); border-radius: 10px;
     padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
-    transition: border-color 0.2s; outline: none; resize: vertical;
+    transition: border-color 0.2s; resize: vertical;
   }
   .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
     border-color: var(--green);
   }
+  /* Marca de foco para quien navega con teclado. Va en :focus-visible para
+     que no aparezca al hacer clic con el mouse. */
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+    outline: 3px solid var(--green-light);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Saltar el menu e ir directo al contenido */
+  .saltar {
+    position: absolute; left: -9999px; top: 0; z-index: 200;
+    background: var(--green-btn); color: #fff; padding: 0.7rem 1.2rem;
+    border-radius: 0 0 10px 0; font-size: 0.9rem; text-decoration: none;
+  }
+  .saltar:focus { left: 0; }
   .form-group select option { background: var(--bg); }
   .form-group textarea { min-height: 110px; }
   .contact-info { display: flex; flex-direction: column; gap: 1.5rem; padding-top: 0.5rem; }
@@ -680,22 +700,25 @@
 </head>
 <body>
 
+<a class="saltar" href="#inicio">Saltar al contenido</a>
+
 <!-- SCROLL PROGRESS -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- NAV -->
 <nav>
   <div class="logo">Fl<span>o</span>wi</div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="nav-links">
     <li><a href="#flowigest">Barberías</a></li>
     <li><a href="#bot-demo">Bot WhatsApp</a></li>
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#como-funciona" data-ver-servicios="1">Servicios</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
-  <div class="hamburger" onclick="toggleMenu()">
+  <button class="hamburger" type="button" onclick="toggleMenu(this)"
+          aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -730,7 +753,7 @@
       </div>
       <div>
         <div class="stat-num">100%</div>
-        <div class="stat-label">No-code, sin programar</div>
+        <div class="stat-label">Sin que programes nada</div>
       </div>
     </div>
   </div>
@@ -815,7 +838,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
           <div style="width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
-          <span style="font-size:0.9rem;color:var(--text-muted);">Disponible 24/7, nunca falla</span>
+          <span style="font-size:0.9rem;color:var(--text-muted);">Contesta a toda hora, todos los días</span>
         </div>
       </div>
       <div style="margin-top:2rem;">
@@ -952,16 +975,16 @@
     <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
         <div class="form-group">
-          <label>Nombre</label>
+          <label for="f-nombre">Nombre</label>
           <input type="text" id="f-nombre" placeholder="Tu nombre" required>
         </div>
         <div class="form-group">
-          <label>WhatsApp</label>
+          <label for="f-whatsapp">WhatsApp</label>
           <input type="tel" id="f-whatsapp" placeholder="+54 341 xxxx-xxxx" required>
         </div>
       </div>
       <div class="form-group">
-        <label>Tipo de negocio</label>
+        <label for="f-negocio">Tipo de negocio</label>
         <select id="f-negocio">
           <option value="">Seleccioná una opción</option>
           <option>Barbería / peluquería</option>
@@ -973,7 +996,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label>¿Qué proceso querés automatizar?</label>
+        <label for="f-mensaje">¿Qué proceso querés automatizar?</label>
         <textarea id="f-mensaje" placeholder="Ej: Hola, quisiera saber cuánto cuesta armar una pagina Web para mi negocio..."></textarea>
       </div>
       <label style="display:flex; align-items:flex-start; gap:8px; font-size:0.78rem; color:var(--text-muted); cursor:pointer;">
@@ -983,7 +1006,6 @@
       <button type="submit" class="btn-primary" style="align-self:flex-start;">
         Enviar consulta →
       </button>
-      <p id="form-success" style="display:none; color:var(--green); font-size:0.88rem;">¡Gracias! Te redirigimos a WhatsApp para confirmar tu consulta. 🚀</p>
     </form>
     <div>
       <div class="contact-info">
@@ -1019,6 +1041,7 @@
   <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
     <a href="privacidad" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Política de Privacidad</a>
     <a href="terminos" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Términos y Condiciones</a>
+    <a href="cookies" style="color:var(--text-muted); font-size:0.8rem; text-decoration:none;">Cookies</a>
     <p class="footer-copy" style="margin:0;">© 2026 Flowi · autoflowi.com</p>
   </div>
 </footer>
@@ -1032,9 +1055,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-function toggleMenu() {
+function toggleMenu(boton) {
   const links = document.querySelector('.nav-links');
-  if (links.style.display === 'flex') {
+  const abierto = links.style.display === 'flex';
+  if (boton) {
+    boton.setAttribute('aria-expanded', abierto ? 'false' : 'true');
+    boton.setAttribute('aria-label', abierto ? 'Abrir menú' : 'Cerrar menú');
+  }
+  if (abierto) {
     links.style.display = 'none';
   } else {
     links.style.cssText = 'display:flex; flex-direction:column; position:absolute; top:60px; left:0; right:0; background:var(--bg); padding:1rem 5%; border-bottom:1px solid var(--border); gap:1rem; z-index:99;';
