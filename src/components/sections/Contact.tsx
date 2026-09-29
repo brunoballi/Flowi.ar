@@ -6,7 +6,6 @@ import Wordmark from "../Wordmark";
 import { WaveGlyph } from "../Logo";
 import Title from "../ui/Title";
 
-type Status = "idle" | "sending" | "ok" | "error";
 type Form = { name: string; whatsapp: string; business: string; process: string; privacy: boolean };
 const empty: Form = { name: "", whatsapp: "", business: "", process: "", privacy: false };
 
@@ -17,23 +16,22 @@ export default function Contact() {
   const c = site.contact;
   const f = c.fields;
   const [form, setForm] = useState<Form>(empty);
-  const [status, setStatus] = useState<Status>("idle");
+  const [sent, setSent] = useState(false);
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setForm((s) => ({ ...s, [k]: v }));
 
-  const waText = `Hola Flowi, soy ${form.name || "…"} (${form.business || "mi negocio"}). Quiero automatizar: ${form.process || "…"}`;
-
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("sending");
-    try {
-      const res = await fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      if (res.ok) {
-        setStatus("ok");
-        setForm(empty);
-      } else setStatus("error");
-    } catch {
-      setStatus("error");
-    }
+    const text = `Hola Flowi, soy ${form.name} (${form.business}). Quiero automatizar: ${form.process}`;
+    // Se abre acá adentro del submit, sin ningún await antes: si lo demoramos
+    // (por ejemplo esperando la respuesta de /api/lead), el navegador bloquea
+    // el popup por no venir ya directo del gesto del usuario.
+    window.open(wa(text), "_blank");
+    setSent(true);
+    const payload = form;
+    setForm(empty);
+    // Best-effort en segundo plano, para cuando haya un LEAD_WEBHOOK_URL real
+    // configurado. La consulta ya se mandó por WhatsApp pase lo que pase acá.
+    fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
   }
 
   return (
@@ -106,19 +104,11 @@ export default function Contact() {
               </span>
             </label>
             <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-              <button type="submit" disabled={status === "sending"} className="btn btn-dark disabled:opacity-60">
-                {status === "sending" ? "Enviando…" : c.button}
+              <button type="submit" className="btn btn-dark">
+                {c.button}
               </button>
               <p className="mono text-[12px]" role="status">
-                {status === "ok" && c.success}
-                {status === "error" && (
-                  <>
-                    {c.error}{" "}
-                    <a href={wa(waText)} target="_blank" rel="noreferrer" className="font-semibold underline">
-                      abrir WhatsApp
-                    </a>
-                  </>
-                )}
+                {sent && c.success}
               </p>
             </div>
           </form>

@@ -238,8 +238,7 @@ export const site = {
       privacy: "Acepto la Política de Privacidad para que Flowi use mis datos para responder esta consulta.",
     },
     button: "Enviar consulta →",
-    success: "¡Listo! Te respondemos en menos de 24 horas hábiles.",
-    error: "No pudimos enviar la consulta. Escribinos directo por WhatsApp:",
+    success: "¡Listo! Te abrimos WhatsApp con tu consulta armada.",
     info: [
       ["email", "brunoballinari@gmail.com"],
       ["instagram", "@flowi.estudio"],
