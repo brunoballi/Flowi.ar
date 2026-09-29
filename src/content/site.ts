@@ -6,6 +6,9 @@ export const wa = (text: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURI
 
 export const site = {
   name: "Flowi",
+  // Texto que acompaña al isotipo en el nav, el footer y el panel de contacto.
+  // Es un nombre más largo, así que ahí va solo (sin el ícono al lado).
+  wordmark: "Flowi estudio",
   domain: "autoflowi.com",
   city: "Rosario, Santa Fe",
   email: "brunoballinari@gmail.com",
@@ -64,15 +67,22 @@ export const site = {
 
   integrations: {
     label: "se conecta con lo que ya usás",
+    // "brand" busca el logo oficial en BRAND_ICONS (src/content/brandIcons.ts).
+    // "web" y "formularios" no son marcas: usan un ícono genérico propio.
     items: [
-      ["WA", "whatsapp"],
-      ["IG", "instagram"],
-      ["MP", "mercado pago"],
-      ["GS", "sheets"],
-      ["GC", "calendar"],
-      ["WEB", "tu web"],
-      ["QR", "formularios"],
-    ] as [string, string][],
+      { key: "whatsapp", kind: "brand", name: "whatsapp" },
+      { key: "instagram", kind: "brand", name: "instagram" },
+      { key: "facebook", kind: "brand", name: "facebook" },
+      { key: "mercadopago", kind: "brand", name: "mercado pago" },
+      { key: "gmail", kind: "brand", name: "gmail" },
+      { key: "googlesheets", kind: "brand", name: "sheets" },
+      { key: "googlecalendar", kind: "brand", name: "calendar" },
+      { key: "googlemaps", kind: "brand", name: "maps" },
+      { key: "googledrive", kind: "brand", name: "drive" },
+      { key: "shopify", kind: "brand", name: "tienda online" },
+      { key: "web", kind: "generic", name: "tu web" },
+      { key: "qr", kind: "generic", name: "formularios" },
+    ] as { key: string; kind: "brand" | "generic"; name: string }[],
   },
 
   bolillero: {
@@ -85,7 +95,6 @@ export const site = {
     prizes: [
       { title: "Demo guiada de FlowiGest", text: "Te mostramos el sistema andando, con datos de prueba, y te respondemos todo lo que quieras preguntar." },
       { title: "Diagnóstico exprés de tu negocio", text: "Contanos cómo trabajás hoy y te decimos por dónde conviene arrancar a automatizar. Sin vueltas y sin compromiso." },
-      { title: "Turno prioritario", text: "Te agendamos esta semana: pasás adelante en la fila de arranques." },
     ],
   },
 
@@ -244,7 +253,7 @@ export const site = {
     status: ["primera consulta sin cargo", "respuesta en menos de 24 h hábiles", "hecho en Rosario"],
     tagline: "Sistemas a medida, bots de WhatsApp, páginas web y tiendas online.",
     cols: [
-      { title: "servicios", links: [["Sistemas a medida", "#servicios"], ["Bots de WhatsApp", "#bot-demo"], ["Páginas web", "#servicios"], ["Tiendas online", "#servicios"]] },
+      { title: "servicios", links: [["Sistemas a medida", "#servicios"], ["Bots de WhatsApp", "#bot-demo"]] },
       { title: "flowi", links: [["FlowiGest para barberías", "#flowigest"], ["Cómo funciona", "#como-funciona"], ["Contacto", "#contacto"]] },
       { title: "legal", links: [["Política de Privacidad", "/privacidad"], ["Términos y Condiciones", "/terminos"], ["Cookies", "/cookies"]] },
     ] as { title: string; links: [string, string][] }[],

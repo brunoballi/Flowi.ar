@@ -1,5 +1,4 @@
 import { site } from "@/content/site";
-import Logo from "../Logo";
 
 export default function Footer() {
   const f = site.footer;
@@ -14,9 +13,7 @@ export default function Footer() {
       </div>
       <div className="grid gap-10 py-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <div className="flex items-center gap-2.5 font-display font-semibold">
-            <Logo size={26} /> {site.name}
-          </div>
+          <div className="font-display font-semibold">{site.wordmark}</div>
           <p className="mt-3 max-w-xs text-[14px] text-muted">{f.tagline}</p>
           <p className="mono mt-3 text-[11px] text-dim">{site.city}</p>
         </div>

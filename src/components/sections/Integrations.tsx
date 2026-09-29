@@ -1,47 +1,78 @@
 "use client";
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
-import { prefersReducedMotion } from "@/lib/useReducedMotion";
+import { useEffect, useState } from "react";
 import { site } from "@/content/site";
+import { BRAND_ICONS } from "@/content/brandIcons";
 import Reveal from "../Reveal";
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
+
+function GenericIcon({ name }: { name: string }) {
+  if (name === "web") {
+    return (
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M3.5 12h17M12 3.5c2.6 2.4 2.6 14.6 0 17M12 3.5c-2.6 2.4-2.6 14.6 0 17" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="6" height="6" rx="1" />
+      <rect x="15" y="3" width="6" height="6" rx="1" />
+      <rect x="3" y="15" width="6" height="6" rx="1" />
+      <path d="M15 15h2.5M15 18.5h6M20 15v2M21 20h-6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function Chip({ item, i }: { item: (typeof site.integrations.items)[number]; i: number }) {
+  const brand = item.kind === "brand" ? BRAND_ICONS[item.key] : null;
+  return (
+    <div className="flex flex-none flex-col items-center gap-2 px-5">
+      <span
+        data-chip
+        className="brand-chip grid h-12 w-12 place-items-center rounded-xl border border-line-strong bg-ink text-muted"
+        style={{ animationDelay: `${i * 0.35}s` }}
+      >
+        {brand ? (
+          <svg viewBox="0 0 24 24" className="h-5 w-5" fill={brand.hex} aria-hidden="true">
+            <path d={brand.path} />
+          </svg>
+        ) : (
+          <GenericIcon name={item.key} />
+        )}
+      </span>
+      <span className="mono whitespace-nowrap text-[11px] text-dim">{item.name}</span>
+    </div>
+  );
+}
 
 export default function Integrations() {
-  const root = useRef<HTMLDivElement>(null);
   const it = site.integrations;
-  useGSAP(
-    () => {
-      if (prefersReducedMotion()) return;
-      const chips = gsap.utils.toArray<HTMLElement>("[data-chip]");
-      const dot = root.current!.querySelector("[data-dot]");
-      const D = 4.2;
-      const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.6 });
-      tl.fromTo(dot, { left: "0%", opacity: 0 }, { left: "100%", opacity: 1, duration: D, ease: "none" });
-      tl.to(dot, { opacity: 0, duration: 0.3 }, D - 0.3);
-      chips.forEach((c, i) => {
-        tl.to(c, { borderColor: "#43E3B0", color: "#43E3B0", boxShadow: "0 0 22px -6px #43E3B0", duration: 0.2, yoyo: true, repeat: 1, repeatDelay: 0.5 }, (i / (chips.length - 1)) * D - 0.1);
-      });
-    },
-    { scope: root },
-  );
+  const [reduced, setReduced] = useState(true);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReduced(prefersReducedMotion());
+  }, []);
+
   return (
     <Reveal stream="hero">
-      <div ref={root} data-reveal className="wrap pb-20">
+      <div data-reveal className="wrap pb-20">
         <p className="label mb-5">{it.label}</p>
-        <div className="-mx-4 overflow-x-auto px-4 pb-2">
-          <div className="relative flex min-w-[560px] items-start justify-between">
-            <div className="absolute left-6 right-6 top-6 border-t border-dashed border-line-strong" aria-hidden="true">
-              <span data-dot className="absolute -top-[3.5px] h-[7px] w-[7px] -translate-x-1/2 rounded-full bg-mint opacity-0 shadow-[0_0_12px_#43E3B0]" />
-            </div>
-            {it.items.map(([abbr, name]) => (
-              <div key={abbr} className="relative flex flex-col items-center gap-2">
-                <span data-chip className="mono grid h-12 w-12 place-items-center rounded-xl border border-line-strong bg-ink text-sm text-muted">
-                  {abbr}
-                </span>
-                <span className="mono text-[11px] text-dim">{name}</span>
-              </div>
+      </div>
+      <div className="marquee-fade -mx-[calc(50vw-50%)] overflow-hidden">
+        {reduced ? (
+          <div className="flex flex-wrap justify-center gap-x-2 gap-y-6 px-6">
+            {it.items.map((item, i) => (
+              <Chip key={item.key} item={item} i={i} />
             ))}
           </div>
-        </div>
+        ) : (
+          <div className="marquee-track flex w-max py-1">
+            {[...it.items, ...it.items].map((item, i) => (
+              <Chip key={`${item.key}-${i}`} item={item} i={i % it.items.length} />
+            ))}
+          </div>
+        )}
       </div>
     </Reveal>
   );

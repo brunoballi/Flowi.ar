@@ -229,7 +229,7 @@ export default function Bolillero() {
             </div>
           ) : (
             <div>
-              <span className="label">3 premios posibles</span>
+              <span className="label">{b.prizes.length} premios posibles</span>
               <ul className="mt-4 space-y-3">
                 {b.prizes.map((p) => (
                   <li key={p.title} className="flex items-start gap-3 text-[15px]">

@@ -1,8 +1,12 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import { site } from "@/content/site";
 import Reveal from "../Reveal";
 import SectionHead from "../ui/SectionHead";
 import { scrollToHash, useLenis } from "../SmoothScroll";
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
+
+const AUTOPLAY_MS = 2000;
 
 function Icon({ name }: { name: string }) {
   const common = { fill: "none", stroke: "#43E3B0", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -40,41 +44,64 @@ function Icon({ name }: { name: string }) {
 export default function Services() {
   const s = site.services;
   const lenis = useLenis();
+  const [index, setIndex] = useState(0);
+  const hovering = useRef(false);
   const go = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith("#")) return;
     e.preventDefault();
     scrollToHash(lenis, href);
   };
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const id = window.setInterval(() => {
+      if (!hovering.current) setIndex((i) => (i + 1) % s.items.length);
+    }, AUTOPLAY_MS);
+    return () => window.clearInterval(id);
+  }, [s.items.length]);
+
+  const it = s.items[index];
+
   return (
     <Reveal as="section" id="servicios" stream="fan" className="wrap py-24">
       <SectionHead eyebrow={s.eyebrow} title={s.title} lede={s.lede} />
-      <div className="grid gap-4 md:grid-cols-2">
-        {s.items.map((it) => (
-          <article
-            key={it.title}
-            data-reveal
-            className={`panel relative flex flex-col p-6 md:p-7 ${it.badge ? "!border-mint/50 shadow-[0_0_60px_-24px_#43E3B0]" : ""}`}
-          >
-            {it.badge && <span className="mono absolute right-5 top-5 rounded-md bg-mint px-2 py-0.5 text-[10px] font-medium text-ink">{it.badge}</span>}
-            <span className="grid h-11 w-11 place-items-center rounded-xl border border-line-strong bg-ink/60">
-              <Icon name={it.icon} />
-            </span>
-            <h3 className="mt-5 font-display text-xl font-semibold tracking-tight">{it.title}</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-muted">{it.text}</p>
-            <ul className="mt-5 flex-1 space-y-2.5 text-[14px]">
-              {it.items.map((x) => (
-                <li key={x} className="flex gap-2.5">
-                  <span className="mono text-mint">✓</span>
-                  {x}
-                </li>
-              ))}
-            </ul>
-            {it.link && (
-              <a href={it.link.href} onClick={(e) => go(e, it.link!.href)} className="mono mt-6 text-[12px] text-mint underline-offset-4 hover:underline">
-                {it.link.label}
-              </a>
-            )}
-          </article>
+      <div onMouseEnter={() => (hovering.current = true)} onMouseLeave={() => (hovering.current = false)}>
+        <article
+          key={index}
+          data-reveal
+          className={`carousel-slide panel relative flex flex-col p-6 md:p-7 ${it.badge ? "!border-mint/50 shadow-[0_0_60px_-24px_#43E3B0]" : ""}`}
+        >
+          {it.badge && <span className="mono absolute right-5 top-5 rounded-md bg-mint px-2 py-0.5 text-[10px] font-medium text-ink">{it.badge}</span>}
+          <span className="grid h-11 w-11 place-items-center rounded-xl border border-line-strong bg-ink/60">
+            <Icon name={it.icon} />
+          </span>
+          <h3 className="mt-5 font-display text-xl font-semibold tracking-tight">{it.title}</h3>
+          <p className="mt-2 text-[15px] leading-relaxed text-muted">{it.text}</p>
+          <ul className="mt-5 flex-1 space-y-2.5 text-[14px] md:columns-2">
+            {it.items.map((x) => (
+              <li key={x} className="flex gap-2.5 break-inside-avoid">
+                <span className="mono text-mint">✓</span>
+                {x}
+              </li>
+            ))}
+          </ul>
+          {it.link && (
+            <a href={it.link.href} onClick={(e) => go(e, it.link!.href)} className="mono mt-6 text-[12px] text-mint underline-offset-4 hover:underline">
+              {it.link.label}
+            </a>
+          )}
+        </article>
+      </div>
+      <div className="carousel-dots mt-6">
+        {s.items.map((svc, i) => (
+          <button
+            key={svc.title}
+            type="button"
+            aria-label={svc.title}
+            aria-current={i === index}
+            onClick={() => setIndex(i)}
+            className={`carousel-dot ${i === index ? "active" : ""}`}
+          />
         ))}
       </div>
       <p data-reveal className="mt-8 max-w-2xl text-[15px] text-muted">

@@ -1,5 +1,4 @@
 "use client";
-import Logo from "./Logo";
 import { site } from "@/content/site";
 import { scrollToHash, useLenis } from "./SmoothScroll";
 
@@ -13,9 +12,8 @@ export default function Nav() {
   return (
     <nav className="sticky top-0 z-50 border-b border-line bg-gradient-to-b from-ink/85 to-ink/40 backdrop-blur-xl">
       <div className="wrap flex h-16 items-center gap-6">
-        <a href="#top" onClick={(e) => go(e, "#top")} className="flex items-center gap-2.5 font-display text-[17px] font-semibold tracking-tight" aria-label={`${site.name}, inicio`}>
-          <Logo id="nav-logo" size={30} />
-          {site.name}
+        <a href="#top" onClick={(e) => go(e, "#top")} className="font-display text-[17px] font-semibold tracking-tight" aria-label={`${site.wordmark}, inicio`}>
+          {site.wordmark}
         </a>
         <div className="ml-auto hidden items-center gap-6 text-sm text-muted md:flex">
           {site.nav.links.map((l) => (

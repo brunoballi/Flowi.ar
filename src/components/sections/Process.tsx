@@ -107,8 +107,21 @@ function Handoff() {
   );
 }
 
+const AUTOPLAY_MS = 2000;
+
 export default function Process() {
   const p = site.process;
+  const [index, setIndex] = useState(0);
+  const hovering = useRef(false);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const id = window.setInterval(() => {
+      if (!hovering.current) setIndex((i) => (i + 1) % p.steps.length);
+    }, AUTOPLAY_MS);
+    return () => window.clearInterval(id);
+  }, [p.steps.length]);
+
   const visuals = [
     <Chat key="c" />,
     <Audit key="a" />,
@@ -120,19 +133,36 @@ export default function Process() {
     </div>,
     <Handoff key="d" />,
   ];
+  const s = p.steps[index];
+
   return (
     <Reveal as="section" id="como-funciona" stream="right" className="wrap py-24">
       <SectionHead eyebrow={p.eyebrow} title={p.title} lede={p.lede} />
-      <div className="divide-y divide-line border-t border-line">
-        {p.steps.map((s, i) => (
-          <div key={s.n} className={`grid items-center gap-10 py-14 md:grid-cols-2 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
-            <div data-reveal className="max-w-md">
-              <span className="mono text-xs text-mint">{s.n}</span>
-              <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
-              <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
-            </div>
-            <div data-reveal>{visuals[i]}</div>
+      <div
+        data-reveal
+        className="border-y border-line py-14"
+        onMouseEnter={() => (hovering.current = true)}
+        onMouseLeave={() => (hovering.current = false)}
+      >
+        <div key={index} className="carousel-slide grid items-center gap-10 md:grid-cols-2">
+          <div className="max-w-md">
+            <span className="mono text-xs text-mint">{s.n}</span>
+            <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
+            <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
           </div>
+          <div>{visuals[index]}</div>
+        </div>
+      </div>
+      <div className="carousel-dots mt-6">
+        {p.steps.map((st, i) => (
+          <button
+            key={st.n}
+            type="button"
+            aria-label={`Paso ${st.n}: ${st.title}`}
+            aria-current={i === index}
+            onClick={() => setIndex(i)}
+            className={`carousel-dot ${i === index ? "active" : ""}`}
+          />
         ))}
       </div>
     </Reveal>

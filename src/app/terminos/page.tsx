@@ -125,9 +125,9 @@ export default function Terminos() {
       <ul>
         <li>Participar es gratuito y no requiere compra, registro ni contratación previa de ningún servicio.</li>
         <li>
-          El tambor tiene 12 bolillas numeradas repartidas en 3 beneficios posibles, en partes iguales: cada giro
-          resulta siempre en uno de los tres, con la misma probabilidad (1 en 3). No hay resultados que no otorguen
-          ningún beneficio.
+          El tambor tiene 12 bolillas numeradas repartidas en 2 beneficios posibles, en partes iguales (6 y 6): cada
+          giro resulta siempre en uno de los dos, con la misma probabilidad (1 en 2). No hay resultados que no
+          otorguen ningún beneficio.
         </li>
         <li>Todos los resultados son servicios prestados por {site.name}. No son canjeables por dinero ni transferibles a terceros.</li>
         <li>El beneficio se reclama por WhatsApp, desde el enlace que aparece al terminar el juego, dentro de los 30 días corridos.</li>
