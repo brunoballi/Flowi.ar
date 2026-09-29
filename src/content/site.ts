@@ -34,7 +34,7 @@ export const site = {
   },
 
   hero: {
-    pill: "Automatización para pequeños y medianos negocios",
+    pill: "Automatización para Pymes",
     title: ["Hecho a tu medida. No al", "revés", "."],
     lede: "Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones, con un plan claro desde la primera reunión.",
     primary: { label: "Sistema para barberías →", href: "#flowigest" },
