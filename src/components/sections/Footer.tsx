@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import Wordmark from "../Wordmark";
 
 export default function Footer() {
   const f = site.footer;
@@ -11,9 +12,9 @@ export default function Footer() {
           </span>
         ))}
       </div>
-      <div className="grid gap-10 py-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="grid gap-10 py-10 md:grid-cols-[1.6fr_1fr]">
         <div>
-          <div className="font-display font-semibold">{site.wordmark}</div>
+          <Wordmark className="text-2xl tracking-tight" />
           <p className="mt-3 max-w-xs text-[14px] text-muted">{f.tagline}</p>
           <p className="mono mt-3 text-[11px] text-dim">{site.city}</p>
         </div>

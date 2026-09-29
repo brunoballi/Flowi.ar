@@ -252,9 +252,9 @@ export const site = {
   footer: {
     status: ["primera consulta sin cargo", "respuesta en menos de 24 h hábiles", "hecho en Rosario"],
     tagline: "Sistemas a medida, bots de WhatsApp, páginas web y tiendas online.",
+    // Las columnas "servicios" y "flowi" se sacaron: repetían, link por link,
+    // lo que ya está en el nav de arriba. Legal es la única que solo vive acá.
     cols: [
-      { title: "servicios", links: [["Sistemas a medida", "#servicios"], ["Bots de WhatsApp", "#bot-demo"]] },
-      { title: "flowi", links: [["FlowiGest para barberías", "#flowigest"], ["Cómo funciona", "#como-funciona"], ["Contacto", "#contacto"]] },
       { title: "legal", links: [["Política de Privacidad", "/privacidad"], ["Términos y Condiciones", "/terminos"], ["Cookies", "/cookies"]] },
     ] as { title: string; links: [string, string][] }[],
     copy: "© 2026 Flowi · autoflowi.com",

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { site, wa } from "@/content/site";
 import Reveal from "../Reveal";
+import Wordmark from "../Wordmark";
 import { WaveGlyph } from "../Logo";
 import Title from "../ui/Title";
 
@@ -39,7 +40,7 @@ export default function Contact() {
     <Reveal as="section" id="contacto" stream="fan" className="wrap py-24">
       <div className="grid gap-4 min-[900px]:grid-cols-[1fr_1.4fr]">
         <div data-reveal className="panel relative flex min-h-[320px] flex-col justify-between overflow-hidden p-7">
-          <div className="font-display font-semibold">{site.wordmark}</div>
+          <Wordmark className="text-2xl tracking-tight" />
           <WaveGlyph className="pointer-events-none absolute -right-10 top-6 h-64 w-64" stroke="rgba(255,255,255,.07)" width={3} />
           <div className="relative">
             <p className="max-w-[18em] text-lg leading-snug">{c.brandLine}</p>
