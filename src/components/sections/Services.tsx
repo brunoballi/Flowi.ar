@@ -1,8 +1,10 @@
 "use client";
+import { useEffect, useState } from "react";
 import { site } from "@/content/site";
 import Reveal from "../Reveal";
 import SectionHead from "../ui/SectionHead";
 import { scrollToHash, useLenis } from "../SmoothScroll";
+import { prefersReducedMotion } from "@/lib/useReducedMotion";
 
 function Icon({ name }: { name: string }) {
   const common = { fill: "none", stroke: "#43E3B0", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -56,18 +58,34 @@ function Card({ item, go }: { item: (typeof site.services.items)[number]; go: (e
 export default function Services() {
   const s = site.services;
   const lenis = useLenis();
+  const [reduced, setReduced] = useState(true);
   const go = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     scrollToHash(lenis, href);
   };
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReduced(prefersReducedMotion());
+  }, []);
+
   return (
     <Reveal as="section" id="servicios" stream="fan" className="wrap py-24">
       <SectionHead eyebrow={s.eyebrow} title={s.title} lede={s.lede} />
-      <div data-reveal className="flex flex-wrap justify-center gap-4">
-        {s.items.map((item) => (
-          <Card key={item.title} item={item} go={go} />
-        ))}
+      <div data-reveal className="marquee-fade -mx-[calc(50vw-50%)] overflow-hidden">
+        {reduced ? (
+          <div className="flex flex-wrap justify-center gap-4 px-6">
+            {s.items.map((item) => (
+              <Card key={item.title} item={item} go={go} />
+            ))}
+          </div>
+        ) : (
+          <div className="marquee-track-once flex w-max gap-4 py-1">
+            {s.items.map((item) => (
+              <Card key={item.title} item={item} go={go} />
+            ))}
+          </div>
+        )}
       </div>
       <p data-reveal className="mt-8 max-w-2xl text-[15px] text-muted">
         {s.extra}{" "}

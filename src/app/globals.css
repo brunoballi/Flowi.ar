@@ -187,15 +187,26 @@ body {
   .marquee-track {
     animation: marquee 34s linear infinite;
   }
-  .marquee-track-slow {
-    animation-duration: 20s;
-  }
-  .marquee-fade:hover .marquee-track {
+  .marquee-fade:hover .marquee-track,
+  .marquee-fade:hover .marquee-track-once {
     animation-play-state: paused;
   }
   @keyframes marquee {
     to {
       transform: translateX(-50%);
+    }
+  }
+  /* Una sola tanda de tarjetas (sin duplicar): recorre toda la fila y
+     desaparece del todo antes de volver a empezar desde el principio. */
+  .marquee-track-once {
+    animation: marquee-once 16s linear infinite;
+  }
+  @keyframes marquee-once {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
     }
   }
   .brand-chip {
