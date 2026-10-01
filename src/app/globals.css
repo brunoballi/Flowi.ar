@@ -188,7 +188,7 @@ body {
     animation: marquee 34s linear infinite;
   }
   .marquee-fade:hover .marquee-track,
-  .marquee-fade:hover .marquee-track-once {
+  .marquee-fade:hover .marquee-track-fast {
     animation-play-state: paused;
   }
   @keyframes marquee {
@@ -196,18 +196,8 @@ body {
       transform: translateX(-50%);
     }
   }
-  /* Una sola tanda de tarjetas (sin duplicar): recorre toda la fila y
-     desaparece del todo antes de volver a empezar desde el principio. */
-  .marquee-track-once {
-    animation: marquee-once 16s linear infinite;
-  }
-  @keyframes marquee-once {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-100%);
-    }
+  .marquee-track-fast {
+    animation: marquee 16s linear infinite;
   }
   .brand-chip {
     animation: chip-glow 6s ease-in-out infinite;

@@ -80,9 +80,9 @@ export default function Services() {
             ))}
           </div>
         ) : (
-          <div className="marquee-track-once flex w-max gap-4 py-1">
-            {s.items.map((item) => (
-              <Card key={item.title} item={item} go={go} />
+          <div className="marquee-track-fast flex w-max gap-4 py-1">
+            {[...s.items, ...s.items].map((item, i) => (
+              <Card key={`${item.title}-${i}`} item={item} go={go} />
             ))}
           </div>
         )}

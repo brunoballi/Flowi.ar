@@ -47,14 +47,14 @@ export default function Loader() {
       });
       tl.to(counter, {
         v: 100,
-        duration: 1.4,
+        duration: 0.6,
         ease: "power3.out",
         onUpdate: () => {
           num.textContent = `${Math.round(counter.v)}%`;
           arc.style.strokeDashoffset = String(C * (1 - counter.v / 100));
         },
       })
-        .to(num, { opacity: 0, duration: 0.2 })
+        .to(num, { opacity: 0, duration: 0.15 })
         .add(() => {
           if (!logo) return;
           const a = ring.getBoundingClientRect();
@@ -63,13 +63,13 @@ export default function Loader() {
             x: b.left + b.width / 2 - (a.left + a.width / 2),
             y: b.top + b.height / 2 - (a.top + a.height / 2),
             scale: b.width / a.width,
-            duration: 0.8,
+            duration: 0.4,
             ease: "expo.inOut",
           });
         })
-        .to(el, { backgroundColor: "rgba(5,13,11,0)", duration: 0.7, ease: "power2.inOut" }, "<")
-        .to(logo ?? {}, { opacity: 1, duration: 0.25 }, "-=0.1")
-        .to(ring, { opacity: 0, duration: 0.2 }, "<");
+        .to(el, { backgroundColor: "rgba(5,13,11,0)", duration: 0.35, ease: "power2.inOut" }, "<")
+        .to(logo ?? {}, { opacity: 1, duration: 0.2 }, "-=0.08")
+        .to(ring, { opacity: 0, duration: 0.15 }, "<");
     },
     { scope: root },
   );
