@@ -44,16 +44,20 @@ export const site = {
       { value: "8 a 12", label: "semanas de implementación" },
       { value: "100%", label: "sin que programes nada" },
     ],
-    graph: {
-      title: "Turno por WhatsApp",
-      meta: "3 pasos / 1 rama",
-      nodes: {
-        trigger: { title: "Mensaje recibido", sub: "whatsapp" },
-        cond: { title: "¿Pide turno?", sub: "condición" },
-        yes1: { title: "Reservar en agenda", sub: "flowigest" },
-        yes2: { title: "Confirmar y recordar", sub: "whatsapp" },
-        no: { title: "Responder consulta", sub: "bot" },
-      },
+    // Reporte general del panel del hero: a propósito no es solo "whatsapp",
+    // para que se lea como el panel de todo lo que se automatiza, no de un
+    // solo canal.
+    report: {
+      title: "Reporte de automatización",
+      meta: "4 canales conectados",
+      badge: "esta semana",
+      kpis: [
+        { value: 248, suffix: "", label: "mensajes respondidos" },
+        { value: 62, suffix: "", label: "turnos agendados" },
+        { value: 14, suffix: "h", label: "tiempo ahorrado" },
+      ] as { value: number; suffix: string; label: string }[],
+      trendLabel: "actividad por día",
+      trend: [14, 18, 16, 23, 21, 29, 27, 33, 31, 38, 36, 44] as number[],
       runs: [
         ["turno-barberia", "1,1 s"],
         ["recordatorio-turno", "0,4 s"],

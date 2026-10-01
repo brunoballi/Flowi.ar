@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
 import { site } from "@/content/site";
-import FlowGraph from "../ui/FlowGraph";
+import ReportCard from "../ui/ReportCard";
 import Title from "../ui/Title";
 import { scrollToHash, useLenis } from "../SmoothScroll";
 import { loaderState } from "../Loader";
@@ -84,7 +84,7 @@ export default function Hero() {
       <div data-stage data-hero-in className="[perspective:1200px]">
         <div data-tilt-scroll className="[transform-style:preserve-3d]">
           <div data-tilt-mouse className="[transform-style:preserve-3d]">
-            <FlowGraph />
+            <ReportCard />
           </div>
         </div>
       </div>
