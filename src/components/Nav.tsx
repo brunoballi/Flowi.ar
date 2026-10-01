@@ -27,9 +27,6 @@ export default function Nav() {
           <span className="live-dot" />
           {site.nav.status}
         </span>
-        <a href={site.nav.cta.href} onClick={(e) => go(e, site.nav.cta.href)} className="btn btn-primary ml-auto md:ml-0">
-          {site.nav.cta.label}
-        </a>
       </div>
     </nav>
   );

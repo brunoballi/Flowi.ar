@@ -30,7 +30,6 @@ export const site = {
       { label: "Servicios", href: "#servicios" },
     ],
     status: "respuesta en menos de 24 h hábiles",
-    cta: { label: "Contacto", href: "#contacto" },
   },
 
   hero: {
