@@ -210,8 +210,8 @@ export const site = {
     ] as { label: string; prefix: string; value: number; suffix: string; lead?: string; viz: "spark" | "segments" | "progress" }[],
     cases: [
       ["Barberías", "Turnos online, recordatorios por WhatsApp, caja y comisiones con FlowiGest."],
-      ["Complejos de pádel y fútbol", "Reservas de canchas y señas sin que nadie atienda el teléfono."],
-      ["Gimnasios", "Inscripción a clases, planes y avisos de vencimiento automáticos."],
+      ["Complejos deportivos y gimnasios", "Reservas de canchas, inscripción a clases y avisos de vencimiento, sin que nadie atienda el teléfono."],
+      ["Distribuidoras, estudios y más", "Diseñamos la gestión de tu negocio a medida, sea cual sea el rubro."],
     ] as [string, string][],
   },
 
@@ -240,7 +240,7 @@ export const site = {
   },
 
   footer: {
-    status: ["primera consulta sin cargo", "respuesta en menos de 24 h hábiles", "hecho en Rosario"],
+    status: ["consulta sin cargo", "respuesta en menos de 24 h hábiles", "hecho en Rosario"],
     tagline: "Sistemas a medida, bots de WhatsApp, páginas web y tiendas online.",
     // Las columnas "servicios" y "flowi" se sacaron: repetían, link por link,
     // lo que ya está en el nav de arriba. Legal es la única que solo vive acá.
