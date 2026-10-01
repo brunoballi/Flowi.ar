@@ -122,17 +122,25 @@ export default function Process() {
     return () => window.clearInterval(id);
   }, [p.steps.length]);
 
-  const visuals = [
-    <Chat key="c" />,
-    <Audit key="a" />,
-    <div key="h" className="panel p-5">
-      <Hub nodes={p.build.nodes} />
-      <p className="mono mt-3 flex items-center gap-2 border-t border-line pt-4 text-[11px] text-dim">
-        <span className="live-dot" /> {p.build.foot}
-      </p>
-    </div>,
-    <Handoff key="d" />,
-  ];
+  function renderVisual(i: number) {
+    switch (i) {
+      case 0:
+        return <Chat />;
+      case 1:
+        return <Audit />;
+      case 2:
+        return (
+          <div className="panel p-5">
+            <Hub nodes={p.build.nodes} />
+            <p className="mono mt-3 flex items-center gap-2 border-t border-line pt-4 text-[11px] text-dim">
+              <span className="live-dot" /> {p.build.foot}
+            </p>
+          </div>
+        );
+      default:
+        return <Handoff />;
+    }
+  }
   const s = p.steps[index];
 
   return (
@@ -144,13 +152,28 @@ export default function Process() {
         onMouseEnter={() => (hovering.current = true)}
         onMouseLeave={() => (hovering.current = false)}
       >
-        <div key={index} className="carousel-slide grid items-center gap-10 md:grid-cols-2">
-          <div className="max-w-md">
-            <span className="mono text-xs text-mint">{s.n}</span>
-            <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
-            <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
+        <div className="relative">
+          {/* Reserva el alto del paso más alto para que el autoplay no mueva el resto de la página. */}
+          <div className="invisible grid" aria-hidden="true">
+            {p.steps.map((st, i) => (
+              <div key={st.n} className="col-start-1 row-start-1 grid items-center gap-10 md:grid-cols-2">
+                <div className="max-w-md">
+                  <span className="mono text-xs">{st.n}</span>
+                  <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">{st.title}</h3>
+                  <p className="mt-3 leading-relaxed">{st.text}</p>
+                </div>
+                <div>{renderVisual(i)}</div>
+              </div>
+            ))}
           </div>
-          <div>{visuals[index]}</div>
+          <div key={index} className="carousel-slide absolute inset-0 grid items-center gap-10 md:grid-cols-2">
+            <div className="max-w-md">
+              <span className="mono text-xs text-mint">{s.n}</span>
+              <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
+              <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
+            </div>
+            <div>{renderVisual(index)}</div>
+          </div>
         </div>
       </div>
       <div className="carousel-dots mt-6">

@@ -1,6 +1,8 @@
+import { useId } from "react";
 import Logo from "../Logo";
 
 export default function Hub({ nodes }: { nodes: string[] }) {
+  const uid = useId();
   const pos = [
     [70, 60],
     [330, 60],
@@ -14,10 +16,10 @@ export default function Hub({ nodes }: { nodes: string[] }) {
         const d = `M${x} ${y} C${(x + c[0]) / 2} ${y} ${(x + c[0]) / 2} ${c[1]} ${c[0]} ${c[1]}`;
         return (
           <g key={i}>
-            <path id={`hub-${i}`} d={d} fill="none" stroke="rgba(120,200,170,.25)" strokeWidth="1.2" strokeDasharray="3 4" />
+            <path id={`${uid}-${i}`} d={d} fill="none" stroke="rgba(120,200,170,.25)" strokeWidth="1.2" strokeDasharray="3 4" />
             <circle r="3" fill="#43E3B0">
               <animateMotion dur={`${2.4 + i * 0.4}s`} repeatCount="indefinite" begin={`${i * 0.5}s`}>
-                <mpath href={`#hub-${i}`} />
+                <mpath href={`#${uid}-${i}`} />
               </animateMotion>
             </circle>
             <g transform={`translate(${x - 22} ${y - 22})`}>
