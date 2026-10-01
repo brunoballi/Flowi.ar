@@ -88,14 +88,21 @@ export const site = {
   bolillero: {
     eyebrow: "girá el bolillero",
     title: ["Probá tu", "suerte", " antes de arrancar."],
-    lede: "Pasá el mouse por el tambor para mezclar las bolillas y dale a girar. Lo que salga, lo reclamás por WhatsApp.",
+    // A propósito no lista los premios acá: que no sea obvio qué se puede
+    // ganar es parte de la gracia de jugarlo.
+    lede: "Pasá el mouse por el tambor para mezclar las bolillas y dale a girar. Ganar algo puede llevarte más de un intento.",
     button: "Girar",
+    retryButton: "Girar de nuevo",
     again: "Empezar de nuevo",
     claim: "Reclamar por WhatsApp →",
+    // "weight" son bolillas de las 12 totales que tocan ese resultado -- tienen
+    // que sumar 12. "retry" marca los resultados que no son premio: no
+    // muestran el botón de reclamo, solo invitan a girar de nuevo.
     prizes: [
-      { title: "Demo guiada de FlowiGest", text: "Te mostramos el sistema andando, con datos de prueba, y te respondemos todo lo que quieras preguntar." },
-      { title: "Diagnóstico exprés de tu negocio", text: "Contanos cómo trabajás hoy y te decimos por dónde conviene arrancar a automatizar. Sin vueltas y sin compromiso." },
-    ],
+      { title: "Demo guiada de FlowiGest", text: "Te mostramos el sistema andando, con datos de prueba, y te respondemos todo lo que quieras preguntar.", weight: 2 },
+      { title: "Diagnóstico exprés de tu negocio", text: "Contanos cómo trabajás hoy y te decimos por dónde conviene arrancar a automatizar. Sin vueltas y sin compromiso.", weight: 2 },
+      { title: "Esta vez no salió nada", text: "Las bolillas no te acompañaron. Dale, intentá de nuevo: podés girar las veces que quieras.", weight: 8, retry: true },
+    ] as { title: string; text: string; weight: number; retry?: boolean }[],
   },
 
   flowigest: {
@@ -174,36 +181,16 @@ export const site = {
   services: {
     eyebrow: "lo que hacemos",
     title: ["Nuestros", "servicios", "."],
-    lede: "Cuatro formas de sacarte trabajo de encima. Cada una, a la medida de tu negocio.",
+    lede: "Cuatro formas de sacarte trabajo de encima. Tocá cualquiera y pasamos directo a contarte los detalles.",
+    // Tarjetas cortas a propósito: van en el carrusel horizontal de abajo,
+    // que deriva todo al formulario de contacto. El detalle de cada servicio
+    // se da en la charla, no acá.
     items: [
-      {
-        icon: "sistemas",
-        badge: "más pedido",
-        title: "Sistemas a medida",
-        text: "El sistema que tu negocio necesita, diseñado para cómo trabajás vos: turnos, reservas, caja, inventario, clientes y reportes.",
-        items: ["Relevamiento y diseño previo", "Panel de administración y vista para tu equipo", "Capacitación del equipo incluida", "Opción de suscripción mensual disponible"],
-        link: { label: "¿Tenés una barbería? Conocé FlowiGest →", href: "#flowigest" },
-      },
-      {
-        icon: "bot",
-        title: "Bots de WhatsApp",
-        text: "Atención automática 24/7 con menú de opciones, captura de datos, confirmación de reservas y derivación a humano cuando hace falta.",
-        items: ["Configuración completa del flujo", "Menú interactivo personalizado", "Integración con tu agenda o sistema", "Pruebas y ajustes incluidos"],
-        link: { label: "Probalo acá arriba →", href: "#bot-demo" },
-      },
-      {
-        icon: "web",
-        title: "Páginas web",
-        text: "Tu presencia profesional en internet, lista para que te encuentren y te escriban. Diseñada a la medida de tu marca.",
-        items: ["Diseño propio, no una plantilla", "Optimizada para mobile y para Google", "Botón de WhatsApp y formulario de contacto", "Dominio, hosting y SSL (no incluidos)"],
-      },
-      {
-        icon: "tienda",
-        title: "Tiendas online",
-        text: "Vendé sin depender de contestar mensajes uno por uno: catálogo, carrito y cobro online funcionando solos.",
-        items: ["Catálogo con stock y variantes", "Medios de pago y envíos configurados", "Avisos automáticos de cada pedido", "Panel para cargar productos vos mismo"],
-      },
-    ] as { icon: string; badge?: string; title: string; text: string; items: string[]; link?: { label: string; href: string } }[],
+      { icon: "sistemas", title: "Sistemas a medida", text: "Turnos, caja, inventario y reportes: el sistema que tu negocio necesita." },
+      { icon: "bot", title: "Bots de WhatsApp", text: "Atención 24/7, reservas y derivación a un humano cuando hace falta." },
+      { icon: "web", title: "Páginas web", text: "Tu presencia profesional en internet, lista para que te encuentren." },
+      { icon: "tienda", title: "Tiendas online", text: "Catálogo, carrito y cobro funcionando solos, sin contestar uno por uno." },
+    ] as { icon: string; title: string; text: string }[],
     extra: "También hacemos formularios con QR y encuestas, y mantenimiento mensual de todo lo que implementamos.",
     extraLink: { label: "¿Tenés un proceso específico? Consultanos →", href: "#contacto" },
   },

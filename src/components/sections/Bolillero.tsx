@@ -12,6 +12,10 @@ const COLORS = ["#43E3B0", "#4FB3FF", "#E8B04A", "#B79CF2", "#F08A7E", "#E4F1EC"
 const R = 150; // radio del tambor (px de canvas lógico)
 const BR = 17; // radio de cada bolilla
 
+// Reparte las 12 bolillas según el "weight" de cada premio (tienen que sumar
+// 12). bolillero.prizes[POOL[n-1]] da el premio de la bolilla n.
+const PRIZE_POOL = site.bolillero.prizes.flatMap((p, i) => Array(p.weight).fill(i));
+
 function initBalls(): Ball[] {
   // Posiciones fijas en espiral: nada aleatorio en render.
   return Array.from({ length: 12 }, (_, i) => {
@@ -166,7 +170,7 @@ export default function Bolillero() {
     const reduced = prefersReducedMotion();
     const bs = balls.current;
     const pick = bs[Math.floor(Math.random() * bs.length)];
-    const prize = b.prizes[pick.n % b.prizes.length];
+    const prize = b.prizes[PRIZE_POOL[pick.n - 1]];
     const finish = () => {
       balls.current = balls.current.filter((x) => x !== pick);
       setResult({ n: pick.n, c: pick.c, prize });
@@ -184,6 +188,13 @@ export default function Bolillero() {
     balls.current = initBalls();
     setResult(null);
     setPhase("idle");
+  };
+
+  // Para el resultado "sin premio": repone las bolillas y gira de una, sin
+  // que tenga que volver a la pantalla inicial y tocar "Girar" de nuevo.
+  const playAgain = () => {
+    balls.current = initBalls();
+    spinNow();
   };
 
   return (
@@ -212,34 +223,33 @@ export default function Bolillero() {
           </div>
         </div>
 
-        <div className="min-h-[220px]">
+        <div className="flex min-h-[220px] flex-col justify-center">
           {result ? (
             <div className="bubble-in">
               <span className="label">salió la bolilla {result.n}</span>
               <h3 className="mt-3 font-display text-[clamp(26px,3vw,36px)] font-semibold leading-tight tracking-tight">{result.prize.title}</h3>
               <p className="mt-3 max-w-md leading-relaxed text-muted">{result.prize.text}</p>
               <div className="mt-7 flex flex-wrap items-center gap-4">
-                <a href={wa(`Hola Flowi, giré el bolillero y me salió: ${result.prize.title}`)} target="_blank" rel="noreferrer" className="btn btn-primary">
-                  {b.claim}
-                </a>
-                <button type="button" onClick={reset} className="mono text-[12px] text-muted underline underline-offset-4 hover:text-text">
-                  {b.again}
-                </button>
+                {result.prize.retry ? (
+                  <button type="button" onClick={playAgain} className="btn btn-primary">
+                    {b.retryButton}
+                  </button>
+                ) : (
+                  <>
+                    <a href={wa(`Hola Flowi, giré el bolillero y me salió: ${result.prize.title}`)} target="_blank" rel="noreferrer" className="btn btn-primary">
+                      {b.claim}
+                    </a>
+                    <button type="button" onClick={reset} className="mono text-[12px] text-muted underline underline-offset-4 hover:text-text">
+                      {b.again}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ) : (
             <div>
-              <span className="label">{b.prizes.length} premios posibles</span>
-              <ul className="mt-4 space-y-3">
-                {b.prizes.map((p) => (
-                  <li key={p.title} className="flex items-start gap-3 text-[15px]">
-                    <span className="mt-1.5 h-2 w-2 flex-none rounded-full bg-mint shadow-[0_0_10px_#43E3B0]" />
-                    <span>
-                      <span className="text-text">{p.title}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <span className="label">pasá el mouse para mezclar</span>
+              <p className="mt-3 max-w-xs text-[15px] text-muted">Dale a girar cuando quieras: no sabés qué va a salir hasta que para.</p>
               <button type="button" onClick={spinNow} disabled={phase === "spinning"} className="btn btn-primary mt-8 min-w-40 disabled:opacity-60">
                 {phase === "spinning" ? "Girando…" : b.button}
               </button>
