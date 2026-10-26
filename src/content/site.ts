@@ -3,6 +3,8 @@
 
 const WA_NUMBER = "543413487910";
 export const wa = (text: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+// Promo de lanzamiento de FlowiGest: todos los botones "pedí tu demo" llevan al mismo mensaje.
+const DEMO_LINK = wa("Hola Flowi, quiero la demo gratis de 1 mes de FlowiGest para mi barbería");
 
 export const site = {
   name: "Flowi",
@@ -17,7 +19,7 @@ export const site = {
   seo: {
     title: "Flowi — Automatización a medida para pymes",
     description:
-      "Automatizamos los procesos que te roban tiempo: sistemas a medida, bots de WhatsApp, páginas web y tiendas online para pymes. Sin programar y con un plan claro desde la primera reunión.",
+      "Sistemas a medida, bots de WhatsApp, páginas web y tiendas online para pymes. Probá FlowiGest, nuestro sistema para barberías, gratis por 1 mes.",
     ogImage: "/media/og-flowi.jpg",
     ogImageAlt: "Flowi — Hecho a tu medida. No al revés.",
   },
@@ -30,13 +32,15 @@ export const site = {
       { label: "Servicios", href: "#servicios" },
     ],
     status: "respuesta en menos de 24 h hábiles",
+    // Visible en todos los tamaños: en celular es lo único que acompaña al logo.
+    cta: { label: "Demo gratis", href: DEMO_LINK },
   },
 
   hero: {
     pill: "Automatización para Pymes",
     title: ["Hecho a tu medida. No al", "revés", "."],
     lede: "Automatizamos los procesos que te roban tiempo. Sin programar, sin complicaciones, con un plan claro desde la primera reunión.",
-    primary: { label: "Sistema para barberías →", href: "#flowigest" },
+    primary: { label: "Probá FlowiGest gratis →", href: "#flowigest" },
     secondary: { label: "Probá el bot en vivo", href: "#bot-demo" },
     stats: [
       { value: "+20", label: "procesos automatizados" },
@@ -93,7 +97,10 @@ export const site = {
     title: ["Probá tu", "suerte", " antes de arrancar."],
     // A propósito no lista los premios acá: que no sea obvio qué se puede
     // ganar es parte de la gracia de jugarlo.
-    lede: "Pasá el mouse por el tambor para mezclar las bolillas y dale a girar. Ganar algo puede llevarte más de un intento.",
+    lede: "Mezclá las bolillas y dale a girar. Ganar algo puede llevarte más de un intento.",
+    // Con mouse se mezcla pasando el cursor; en pantallas táctiles, tocando el tambor.
+    hintHover: "pasá el mouse para mezclar",
+    hintTouch: "tocá el tambor para mezclar",
     button: "Girar",
     retryButton: "Girar de nuevo",
     again: "Empezar de nuevo",
@@ -119,7 +126,8 @@ export const site = {
       "Control de caja, gastos, adelantos y bonos",
       "Multi-sucursal, reportes financieros y auditoría de cambios",
     ],
-    primary: { label: "Quiero empezar una demo →", href: wa("Hola Flowi, quiero empezar una demo de FlowiGest para mi barbería") },
+    promo: { pill: "promo de lanzamiento", text: "1 mes gratis. Si te gusta, seguís con la suscripción; si no, no pagás nada." },
+    primary: { label: "Quiero mi demo gratis →", href: DEMO_LINK },
     secondary: { label: "Lo quiero a medida", href: "#contacto" },
     caption: "La reserva del cliente, la app del barbero y el panel del admin, andando",
     video: {
@@ -129,7 +137,34 @@ export const site = {
       width: 1920,
       height: 1080,
       label: "Demo de FlowiGest: el cliente reserva desde el celular, el barbero carga sus cortes y el admin maneja turnos, equipo, servicios y liquidaciones",
+      // En celular se usa la versión vertical: la horizontal se veía de 358 px de ancho y no se leía.
+      mobile: {
+        webm: "/media/escena-sistema-vertical.webm",
+        src: "/media/escena-sistema-vertical.mp4",
+        poster: "/media/escena-poster-vertical.jpg",
+        width: 720,
+        height: 1280,
+      },
     },
+  },
+
+  // Página de la promo (autoflowi.com/barberias): es adonde apunta el anuncio de Instagram.
+  promo: {
+    seo: {
+      title: "FlowiGest: demo gratis por 1 mes para tu barbería — Flowi",
+      description: "Reservas online, aviso por WhatsApp, cortes y liquidaciones en un solo lugar. Probá FlowiGest 1 mes gratis; si te gusta, seguís con la suscripción.",
+    },
+    pill: "promo de lanzamiento",
+    title: ["Tu barbería, sin planillas.", "1 mes", " gratis."],
+    lede: "FlowiGest: reservas online, aviso por WhatsApp, cortes y liquidaciones en un solo lugar. Lo usás un mes sin costo y, si te gusta, seguís con la suscripción.",
+    cta: { label: "Quiero mi demo gratis →", href: DEMO_LINK },
+    secondary: { label: "Ver el sistema andando" },
+    steps: [
+      { n: "01", title: "Pedís tu demo gratis", text: "Te mostramos el sistema andando." },
+      { n: "02", title: "La probás 1 mes", text: "Sin costo y sin compromiso." },
+      { n: "03", title: "Si te gusta, seguís con la suscripción", text: "Si no, no pagás nada." },
+    ],
+    note: "Respondemos en menos de 24 h hábiles.",
   },
 
   bot: {

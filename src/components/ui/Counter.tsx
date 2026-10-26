@@ -19,7 +19,8 @@ export default function Counter({ value, suffix = "", duration = 1.6, className 
     let raf = 0;
     const t0 = performance.now();
     const tick = (now: number) => {
-      const k = Math.min(1, (now - t0) / (duration * 1000));
+      // El primer cuadro de requestAnimationFrame puede traer una hora anterior a t0: sin el 0 mostraba valores negativos.
+      const k = Math.min(1, Math.max(0, (now - t0) / (duration * 1000)));
       setV(Math.round((1 - Math.pow(1 - k, 3)) * value));
       if (k < 1) raf = requestAnimationFrame(tick);
     };

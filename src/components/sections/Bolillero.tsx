@@ -204,8 +204,11 @@ export default function Bolillero() {
         <div className="flex flex-col items-center">
           <canvas
             ref={canvasRef}
-            onMouseMove={() => {
+            onPointerMove={() => {
               if (phase !== "spinning") stir.current = Math.min(2.2, stir.current + 0.25);
+            }}
+            onPointerDown={() => {
+              if (phase !== "spinning") stir.current = Math.min(2.2, stir.current + 0.6);
             }}
             className="aspect-square w-[340px] max-w-full cursor-grab"
             aria-label="Bolillero con 12 bolillas numeradas"
@@ -248,7 +251,10 @@ export default function Bolillero() {
             </div>
           ) : (
             <div>
-              <span className="label">pasá el mouse para mezclar</span>
+              <span className="label">
+                <span className="[@media(hover:hover)]:hidden">{b.hintTouch}</span>
+                <span className="hidden [@media(hover:hover)]:inline">{b.hintHover}</span>
+              </span>
               <p className="mt-3 max-w-xs text-[15px] text-muted">Dale a girar cuando quieras: no sabés qué va a salir hasta que para.</p>
               <button type="button" onClick={spinNow} disabled={phase === "spinning"} className="btn btn-primary mt-8 min-w-40 disabled:opacity-60">
                 {phase === "spinning" ? "Girando…" : b.button}
