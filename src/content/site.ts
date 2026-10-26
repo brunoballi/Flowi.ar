@@ -165,6 +165,14 @@ export const site = {
       { n: "03", title: "Si te gusta, seguís con la suscripción", text: "Si no, no pagás nada." },
     ],
     note: "Respondemos en menos de 24 h hábiles.",
+    testimonial: {
+      label: "ya lo usan",
+      quote: "Este sistema, sin dudas, fue lo mejor que nos pasó.",
+      author: "Jesús",
+      role: "dueño de Salón Masculino Valhalla",
+      logo: "/media/logo-valhalla.png",
+      logoAlt: "Logo de Salón Valhalla",
+    },
   },
 
   bot: {

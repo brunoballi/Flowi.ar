@@ -5,6 +5,7 @@ import Reveal from "../Reveal";
 import Title from "../ui/Title";
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
 import { useHydrated, useMediaQuery } from "@/lib/useMediaQuery";
+import { trackDemo } from "@/lib/track";
 import { scrollToHash, useLenis } from "../SmoothScroll";
 
 /**
@@ -108,7 +109,7 @@ export default function FlowiGest() {
             ))}
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={f.primary.href} target="_blank" rel="noreferrer" className="btn btn-primary">
+            <a href={f.primary.href} onClick={() => trackDemo("seccion")} target="_blank" rel="noreferrer" className="btn btn-primary">
               {f.primary.label}
             </a>
             <a

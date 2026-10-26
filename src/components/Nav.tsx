@@ -1,5 +1,6 @@
 "use client";
 import { site } from "@/content/site";
+import { trackDemo } from "@/lib/track";
 import Wordmark from "./Wordmark";
 import { scrollToHash, useLenis } from "./SmoothScroll";
 
@@ -32,7 +33,7 @@ export default function Nav({ simple = false }: { simple?: boolean }) {
               {site.nav.status}
             </span>
           )}
-          <a href={site.nav.cta.href} target="_blank" rel="noreferrer" className="btn btn-primary !px-4 !py-2.5 !text-[13px] whitespace-nowrap">
+          <a href={site.nav.cta.href} onClick={() => trackDemo("header")} target="_blank" rel="noreferrer" className="btn btn-primary !px-4 !py-2.5 !text-[13px] whitespace-nowrap">
             {site.nav.cta.label}
           </a>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 import { site } from "@/content/site";
 import Title from "../ui/Title";
+import { trackDemo } from "@/lib/track";
 import { scrollToHash, useLenis } from "../SmoothScroll";
 
 /** Encabezado de la página de la promo (/barberias): explica la oferta en tres pasos y lleva al WhatsApp. */
@@ -16,7 +17,7 @@ export default function PromoHero() {
       <Title as="h1" parts={p.title} className="mt-5 max-w-[16em] text-[clamp(38px,6vw,76px)]" />
       <p className="mt-6 max-w-[38em] text-lg leading-relaxed text-muted">{p.lede}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <a href={p.cta.href} target="_blank" rel="noreferrer" className="btn btn-primary">
+        <a href={p.cta.href} onClick={() => trackDemo("promo")} target="_blank" rel="noreferrer" className="btn btn-primary">
           {p.cta.label}
         </a>
         <a

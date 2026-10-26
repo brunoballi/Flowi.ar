@@ -3,6 +3,7 @@ import StreamMount from "@/components/canvas/StreamMount";
 import Nav from "@/components/Nav";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import PromoHero from "@/components/sections/PromoHero";
+import Testimonial from "@/components/sections/Testimonial";
 import FlowiGest from "@/components/sections/FlowiGest";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
@@ -32,6 +33,7 @@ export default function Barberias() {
       <Nav simple />
       <main className="relative z-[1]">
         <PromoHero />
+        <Testimonial />
         <FlowiGest />
         <Contact />
       </main>

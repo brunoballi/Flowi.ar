@@ -4,18 +4,18 @@ import { site } from "@/content/site";
 
 export const metadata: Metadata = {
   title: `Política de Cookies — ${site.name}`,
-  description: "Qué guarda autoflowi.com en tu dispositivo y qué terceros intervienen. El sitio no usa cookies ni herramientas de seguimiento.",
+  description: "Qué guarda autoflowi.com en tu dispositivo y qué terceros intervienen. El sitio no usa cookies; mide las visitas con una herramienta que no las necesita.",
   alternates: { canonical: "/cookies" },
 };
 
 export default function Cookies() {
   return (
-    <LegalPage title="Política de Cookies" updated="septiembre de 2026">
+    <LegalPage title="Política de Cookies" updated="octubre de 2026">
       <div className="callout">
         <p>
-          <strong>En resumen:</strong> este sitio no usa cookies. No hay analítica, ni píxeles publicitarios, ni
-          seguimiento de ningún tipo. Guarda una sola cosa en tu navegador, para que el sitio funcione mejor, y no
-          sale de tu dispositivo.
+          <strong>En resumen:</strong> este sitio no usa cookies ni píxeles publicitarios. Medimos las visitas con
+          Vercel Web Analytics, que no usa cookies ni te sigue entre sitios. Guarda una sola cosa en tu navegador,
+          para que el sitio funcione mejor, y no sale de tu dispositivo.
         </p>
       </div>
 
@@ -79,6 +79,19 @@ export default function Cookies() {
             <td>Servir la página</td>
             <td>Registros técnicos del servidor, que incluyen tu IP, por seguridad y diagnóstico.</td>
           </tr>
+          <tr>
+            <td>
+              Vercel Web Analytics
+              <br />
+              <small>medición de visitas</small>
+            </td>
+            <td>Saber cuánta gente visita el sitio, desde dónde llega y qué botones toca</td>
+            <td>
+              La página que viste, de qué sitio llegaste, el tipo de dispositivo y navegador, el país y los clics en
+              los botones de la demo gratis. No usa cookies, no guarda tu IP ni te identifica, y no recibe lo que
+              escribís en el formulario.
+            </td>
+          </tr>
         </tbody>
       </table>
 
@@ -91,12 +104,12 @@ export default function Cookies() {
       <p>
         No, y por eso no vas a encontrar el típico cartel de cookies. En Argentina, la Ley 25.326 regula el
         tratamiento de datos personales pero no exige consentimiento previo para el almacenamiento técnico que no
-        identifica a nadie, y este sitio además no usa cookies ni hace seguimiento. Lo único que guardamos es
-        estrictamente funcional: sin eso, verías la animación de entrada cada vez que navegás dentro del sitio en la
+        identifica a nadie, y este sitio no usa cookies ni te sigue entre sitios: la medición es agregada y anónima.
+        Lo único que guardamos en tu dispositivo es estrictamente funcional: sin eso, verías la animación de entrada cada vez que navegás dentro del sitio en la
         misma pestaña, en vez de una sola vez.
       </p>
       <p>
-        Si en algún momento sumamos analítica, publicidad o cualquier herramienta que sí haga seguimiento, vamos a
+        Si en algún momento sumamos publicidad o cualquier herramienta que sí use cookies o haga seguimiento, vamos a
         actualizar esta página y a pedirte consentimiento antes de activarla.
       </p>
 

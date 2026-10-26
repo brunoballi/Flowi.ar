@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function Privacidad() {
   return (
-    <LegalPage title="Política de Privacidad" updated="septiembre de 2026">
+    <LegalPage title="Política de Privacidad" updated="octubre de 2026">
       <p>
         Esta política explica qué datos personales recolecta <strong>{site.name}</strong> ({site.domain}) a través de
         este sitio, para qué los usa y qué derechos tenés sobre ellos, en línea con la Ley 25.326 de Protección de
@@ -52,11 +52,11 @@ export default function Privacidad() {
         Si preferís no usar WhatsApp, escribinos por email a{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a> y tu consulta no pasa por Meta.
       </p>
-      <p>Además interviene, sin recibir los datos del formulario:</p>
+      <p>Además intervienen, sin recibir los datos del formulario:</p>
       <ul>
         <li>
           <strong>Vercel</strong>, que aloja el sitio y guarda registros técnicos del servidor con tu dirección IP,
-          por seguridad y diagnóstico.
+          por seguridad y diagnóstico, y para medir las visitas con Vercel Web Analytics (sin cookies y sin identificarte).
         </li>
       </ul>
       <p>
@@ -81,8 +81,11 @@ export default function Privacidad() {
 
       <h2>Cookies y analítica</h2>
       <p>
-        Este sitio no instala cookies ni usa herramientas de analítica o publicidad. Guarda una sola cosa en tu
-        navegador, técnica y necesaria para que el sitio funcione. El detalle completo está en la{" "}
+        Este sitio no instala cookies ni usa publicidad. Para saber cuánta gente lo visita y qué botones se tocan usamos
+        Vercel Web Analytics, una medición que no usa cookies, no te identifica ni te sigue entre sitios: cuenta visitas
+        por página, el origen (por ejemplo, Instagram), el tipo de dispositivo y los clics en los botones de la demo
+        gratis. No recibe lo que escribís en el formulario. Además, el sitio guarda una sola cosa en tu navegador,
+        técnica y necesaria para que funcione. El detalle completo está en la{" "}
         <a href="/cookies">Política de Cookies</a>.
       </p>
 
