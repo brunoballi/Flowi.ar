@@ -6,7 +6,7 @@ import Title from "../ui/Title";
 import { prefersReducedMotion } from "@/lib/useReducedMotion";
 import { scrollToHash, useLenis } from "../SmoothScroll";
 
-/** Video de la demo (notebook + celular). Fondo negro: se funde con el haz de luz. */
+/** Video de la demo (cliente, barbero y admin). Va a todo el ancho de la sección para que se lea. */
 function DemoVideo() {
   const v = site.flowigest.video;
   const wrap = useRef<HTMLDivElement>(null);
@@ -37,7 +37,7 @@ function DemoVideo() {
       <div className="relative" style={{ aspectRatio: `${v.width}/${v.height}` }}>
         <video
           ref={vid}
-          className="video-feather h-full w-full object-contain"
+          className="h-full w-full rounded-2xl border border-line-strong object-contain"
           poster={v.poster}
           muted
           loop
@@ -50,11 +50,6 @@ function DemoVideo() {
           <source src={v.webm} type="video/webm" />
           <source src={v.src} type="video/mp4" />
         </video>
-        {/* etiquetas sobre los equipos */}
-        <span className="pill pointer-events-none absolute left-[6%] top-[2%] hidden bg-ink/70 backdrop-blur sm:inline-flex">
-          <span className="live-dot" /> panel del admin
-        </span>
-        <span className="pill pointer-events-none absolute right-[2%] top-[14%] hidden bg-ink/70 backdrop-blur sm:inline-flex">app del barbero</span>
         <button
           type="button"
           onClick={() => {
@@ -78,7 +73,7 @@ export default function FlowiGest() {
   const lenis = useLenis();
   return (
     <Reveal as="section" id="flowigest" stream="right" className="wrap py-24">
-      <div className="grid items-center gap-14 min-[1000px]:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid items-start gap-10 min-[1000px]:grid-cols-[1.05fr_0.95fr] min-[1000px]:gap-16">
         <div data-reveal>
           <span className="pill">
             <span className="live-dot" />
@@ -86,7 +81,9 @@ export default function FlowiGest() {
           </span>
           <Title parts={f.title} className="mt-5 text-[clamp(32px,4vw,50px)]" />
           <p className="mt-5 max-w-[36em] leading-relaxed text-muted">{f.lede}</p>
-          <ul className="mt-7 space-y-3">
+        </div>
+        <div data-reveal>
+          <ul className="space-y-3">
             {f.features.map((it) => (
               <li key={it} className="flex gap-3 text-[15px]">
                 <span className="mono text-mint">✓</span>
@@ -94,7 +91,7 @@ export default function FlowiGest() {
               </li>
             ))}
           </ul>
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <a href={f.primary.href} target="_blank" rel="noreferrer" className="btn btn-primary">
               {f.primary.label}
             </a>
@@ -110,10 +107,10 @@ export default function FlowiGest() {
             </a>
           </div>
         </div>
-        <div data-reveal>
-          <DemoVideo />
-          <p className="mono mt-4 text-center text-[11px] text-dim">{f.caption}</p>
-        </div>
+      </div>
+      <div data-reveal className="mt-14">
+        <DemoVideo />
+        <p className="mono mt-4 text-center text-[11px] text-dim">{f.caption}</p>
       </div>
     </Reveal>
   );

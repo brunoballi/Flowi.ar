@@ -121,14 +121,14 @@ export const site = {
     ],
     primary: { label: "Quiero empezar una demo →", href: wa("Hola Flowi, quiero empezar una demo de FlowiGest para mi barbería") },
     secondary: { label: "Lo quiero a medida", href: "#contacto" },
-    caption: "El panel del admin en la compu y la app del barbero en el celular",
+    caption: "La reserva del cliente, la app del barbero y el panel del admin, andando",
     video: {
       webm: "/media/escena-sistema.webm",
       src: "/media/escena-sistema.mp4",
       poster: "/media/escena-poster.jpg",
-      width: 1040,
-      height: 620,
-      label: "Demo de FlowiGest: el panel del admin en la notebook y la app del barbero en el celular",
+      width: 1920,
+      height: 1080,
+      label: "Demo de FlowiGest: el cliente reserva desde el celular, el barbero carga sus cortes y el admin maneja turnos, equipo, servicios y liquidaciones",
     },
   },
 
